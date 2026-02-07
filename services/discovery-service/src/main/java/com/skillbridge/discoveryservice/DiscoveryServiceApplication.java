@@ -1,4 +1,4 @@
-package com.skillbridge.discovery_service;
+package com.skillbridge.discoveryservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
