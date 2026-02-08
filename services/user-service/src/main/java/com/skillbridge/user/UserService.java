@@ -42,4 +42,11 @@ public class UserService {
                 .map(userMapper::fromUser)
                 .toList();
     }
+
+    public void deleteUser(@NonNull Long id) {
+        if (!userRepository.existsById(id)) {
+            throw new UserNotFoundException("User not found");
+        }
+        userRepository.deleteById(id);
+    }
 }
