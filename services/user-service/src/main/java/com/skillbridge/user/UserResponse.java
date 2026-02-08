@@ -1,11 +1,14 @@
 package com.skillbridge.user;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
-public record UserResponse(String firstName,
-        String lastName,
-        String email,
-        Date dateOfBirth,
-        String phoneNumber) {
+public record UserResponse(
+                Long id,
+                String firstName,
+                String lastName,
+                String email,
+                LocalDate dateOfBirth,
+                String phoneNumber,
+                Role role) {
 
 }

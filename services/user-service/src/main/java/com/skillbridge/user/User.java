@@ -1,6 +1,6 @@
 package com.skillbridge.user;
 
-import java.sql.Date;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.springframework.data.annotation.CreatedDate;
@@ -37,7 +37,7 @@ public class User {
     private String lastName;
     @Column(unique = true, nullable = false)
     private String email;
-    private Date dateOfBirth;
+    private LocalDate dateOfBirth;
     private String phoneNumber;
     @Enumerated(EnumType.STRING)
     private Role role; // CLIENT, TECHNICIAN, ADMIN, SUPPORT
