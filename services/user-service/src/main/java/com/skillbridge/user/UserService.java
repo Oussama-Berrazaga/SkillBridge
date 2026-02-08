@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.skillbridge.exception.UserAlreadyExistsException;
 import com.skillbridge.exception.UserNotFoundException;
 
 import jakarta.transaction.Transactional;
@@ -27,6 +28,9 @@ public class UserService {
         User user = userMapper.toUser(userRequest);
         if (user == null) {
             throw new IllegalArgumentException("Failed to create user from request");
+        }
+        if (userRepository.existsByEmail(user.getEmail())) {
+            throw new UserAlreadyExistsException("Email already taken");
         }
         return userMapper.fromUser(userRepository.save(user));
     }

@@ -20,6 +20,13 @@ public class GlobalExceptionHandler {
                 .body(exp.getMsg());
     }
 
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public ResponseEntity<String> handle(UserAlreadyExistsException exp) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(exp.getMsg());
+    }
+
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<String> handleConflict(DataIntegrityViolationException ex) {
         // You can get more specific here by checking the exception message
