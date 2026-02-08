@@ -14,39 +14,28 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<String> handle(UserNotFoundException exp) {
-        return ResponseEntity
-                .status(HttpStatus.NOT_FOUND)
-                .body(exp.getMsg());
+    public ResponseEntity<ApiErrorResponse> handle(UserNotFoundException exp) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(new ApiErrorResponse(404, exp.getMsg(), null));
     }
 
     @ExceptionHandler(UserAlreadyExistsException.class)
-    public ResponseEntity<String> handle(UserAlreadyExistsException exp) {
-        return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(exp.getMsg());
-    }
-
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<String> handleConflict(DataIntegrityViolationException ex) {
-        // You can get more specific here by checking the exception message
-        return ResponseEntity
-                .status(HttpStatus.CONFLICT)
-                .body("User already exists or data integrity violation.");
+    public ResponseEntity<ApiErrorResponse> handle(UserAlreadyExistsException exp) {
+        // Use 409 CONFLICT for better REST semantics
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(new ApiErrorResponse(409, exp.getMsg(), null));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException exp) {
+    public ResponseEntity<ApiErrorResponse> handleValidation(MethodArgumentNotValidException exp) {
         var errors = new HashMap<String, String>();
-        exp.getBindingResult().getAllErrors()
-                .forEach(error -> {
-                    var fieldName = ((FieldError) error).getField();
-                    var errorMessage = error.getDefaultMessage();
-                    errors.put(fieldName, errorMessage);
-                });
+        exp.getBindingResult().getAllErrors().forEach(error -> {
+            var fieldName = ((FieldError) error).getField();
+            var errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
 
-        return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(new ErrorResponse(errors));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ApiErrorResponse(400, "Validation Failed", errors));
     }
 }

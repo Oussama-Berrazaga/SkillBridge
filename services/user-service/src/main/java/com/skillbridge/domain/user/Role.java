@@ -1,4 +1,4 @@
-package com.skillbridge.user;
+package com.skillbridge.domain.user;
 
 public enum Role {
     CLIENT,
