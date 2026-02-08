@@ -1,0 +1,19 @@
+server:
+  port: 8222
+spring:
+  cloud:
+    gateway:
+      server:
+        webflux:
+          discovery:
+            locator:
+              enabled: true # Auto-detect services from Eureka
+          routes:
+            - id: user-service
+              uri: lb://USER-SERVICE # lb = Load Balanced via Eureka
+              predicates:
+                - Path=/api/v1/users/**
+logging:
+  level:
+    org.springframework.cloud.gateway: TRACE
+    org.springframework.http.server.reactive: DEBUG
