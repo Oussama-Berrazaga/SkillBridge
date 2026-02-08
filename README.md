@@ -6,18 +6,24 @@ SkillBridge is a Microservice Ecosystem for On-Demand Technical Services.
 
 
 🏗️ System Architecture
-This project follows a microservices architecture to ensure high scalability and decoupling.
+The platform is built on a Cloud-Native Microservices Architecture using Spring Cloud. Each service is independently deployable, possesses its own database (Database-per-Service pattern), and communicates via REST or asynchronous events.
 
-🧩 Microservices
-- Gateway Service: Single entry point for all clients; handles routing and cross-cutting concerns.
+🛠️ Infrastructure Services
+Config Server: Centralized configuration management using a Git-based repository. Provides environment-specific settings for all services.
 
-- User Service (Identity): Manages user profiles, roles (Client/Technician), and authentication.
+Discovery Service (Eureka): Service Registry that allows microservices to find and communicate with each other dynamically without hardcoded IPs.
 
-- Listing Service (Marketplace): Core business logic for creating postings, managing categories, and handling technician applications.
+API Gateway: The single entry point for the system. Handles request routing, security, and rate limiting.
 
-- Chat Service (Negotiation): Real-time WebSocket communication between users to negotiate service details.
+💼 Business Services
+User Service (Identity): Manages authentication, authorization, and user profiles (Client/Technician).
 
-- Booking Service (Commitment): Manages visit proposals, scheduling, and formal service contracts.
+Listing Service (Marketplace): Handles the creation of job posts, hierarchical categories (Sub-categories), and the application/bid process.
 
-- Notification Service (Kafka): Event-driven service that consumes messages to send Emails/SMS/Push notifications asynchronously.
+Chat Service: Facilitates real-time negotiation between Clients and Technicians once an application is accepted.
 
+Booking Service: Manages the "Service Contract"—handling visit proposals, scheduling, and intervention tracking.
+
+Payment Service: Securely processes "Visit Fees" and job payments (Integration with Stripe).
+
+Notification Service: An event-driven service consuming Kafka topics to send emails, SMS, and push notifications asynchronously.
