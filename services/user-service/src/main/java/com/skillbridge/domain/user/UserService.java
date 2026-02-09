@@ -28,11 +28,6 @@ public class UserService {
 
         User user = userMapper.toUser(userRequest);
 
-        // Link the profile back to the user explicitly if mapper didn't
-        if (user.getProfile() != null) {
-            user.getProfile().setUser(user);
-        }
-
         return userMapper.fromUser(userRepository.save(user));
     }
 

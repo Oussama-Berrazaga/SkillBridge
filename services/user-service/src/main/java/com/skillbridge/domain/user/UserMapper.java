@@ -43,12 +43,15 @@ public class UserMapper {
         }
 
         // Build the User and link the profile
-        return User.builder()
+        User user = User.builder()
                 .email(request.email())
                 .password(request.password()) // Should be encoded in Service layer
                 .role(request.role())
                 .profile(profile)
                 .build();
+        user.getProfile().setUser(user); // Ensure bidirectional link is set
+
+        return user;
     }
 
     public UserResponse fromUser(User user) {
