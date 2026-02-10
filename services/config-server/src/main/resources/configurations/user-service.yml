@@ -7,8 +7,6 @@ logging:
       springframework:
         web: INFO
 spring:
-  application:
-    name: user-service
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5433/sbuser

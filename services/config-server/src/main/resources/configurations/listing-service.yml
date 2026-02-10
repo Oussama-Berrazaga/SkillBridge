@@ -7,8 +7,6 @@ logging:
       springframework:
         web: INFO
 spring:
-  application:
-    name: listing-service
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5433/sblisting
@@ -28,3 +26,13 @@ spring:
     baseline-version: 0
     baseline-description: "init"
     locations: classpath:db/migration
+  # jpa:
+  #   database-platform: org.hibernate.dialect.PostgreSQLDialect
+  #   hibernate:
+  #     ddl-auto: validate
+  #   show-sql: true
+  #   properties:
+  #     hibernate:
+  #       format_sql: true
+  #       jakarta.persistence.schema-generation.scripts.action: create
+  #       jakarta.persistence.schema-generation.scripts.create-target: generated_schema.sql
