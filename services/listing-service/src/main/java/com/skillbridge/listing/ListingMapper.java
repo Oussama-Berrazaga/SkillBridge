@@ -4,7 +4,6 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
-import com.skillbridge.common.Status;
 import com.skillbridge.category.Category;
 
 @Component

@@ -14,6 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.skillbridge.category.CategoryRepository;
 import com.skillbridge.common.Status;
 import com.skillbridge.exception.CategoryNotFoundException;
+import com.skillbridge.exception.UserNotFoundException;
+import com.skillbridge.external.UserServiceClient;
 
 import com.skillbridge.category.Category;
 import lombok.RequiredArgsConstructor;
@@ -25,13 +27,21 @@ public class ListingService {
   private final ListingRepository listingRepository;
   private final CategoryRepository categoryRepository;
   private final ListingMapper listingMapper;
+  private final UserServiceClient userServiceClient;
 
   @Transactional
   public ListingResponse createListing(ListingRequest request) {
-    // 1. Validate and Fetch Categories
+
+    // 1. External Validation: Check if customer exists in user-service
+    boolean userExists = userServiceClient.checkUserExists(request.customerId());
+    if (!userExists) {
+      throw new UserNotFoundException("Customer with ID " + request.customerId() + " not found in User Service");
+    }
+
+    // 2. Validate and Fetch Categories
     Set<Category> categories = validateAndGetCategories(request.categoryIds());
 
-    // 2. Build the Entity
+    // 3. Build the Entity
     Listing listing = Listing.builder()
         .title(request.title())
         .description(request.description())
@@ -40,7 +50,7 @@ public class ListingService {
         .categories(categories)
         .build();
 
-    // 3. Save and Return
+    // 4. Save and Return
     Listing saved = listingRepository.save(listing);
 
     return listingMapper.toListingResponse(saved);

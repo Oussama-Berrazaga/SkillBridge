@@ -34,6 +34,11 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserById(id));
     }
 
+    @GetMapping("/exists/{id}")
+    public ResponseEntity<Boolean> checkUserExists(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.checkUserExists(id));
+    }
+
     @GetMapping
     public ResponseEntity<List<UserResponse>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
