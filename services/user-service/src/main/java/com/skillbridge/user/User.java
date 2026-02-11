@@ -1,4 +1,4 @@
-package com.skillbridge.domain.user;
+package com.skillbridge.user;
 
 import java.time.LocalDateTime;
 
@@ -6,7 +6,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import com.skillbridge.domain.profile.Profile;
+import com.skillbridge.profile.Profile;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;

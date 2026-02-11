@@ -1,4 +1,4 @@
-package com.skillbridge.domain.user;
+package com.skillbridge.user;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -9,8 +9,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.skillbridge.domain.profile.ProfileRequest;
-import com.skillbridge.domain.profile.SkillRequest;
+import com.skillbridge.profile.ProfileRequest;
+import com.skillbridge.profile.SkillRequest;
 
 import static org.junit.jupiter.api.Assertions.*;
 

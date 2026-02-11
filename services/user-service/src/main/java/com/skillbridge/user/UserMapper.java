@@ -1,15 +1,11 @@
-package com.skillbridge.domain.user;
+package com.skillbridge.user;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
 
-import com.skillbridge.domain.profile.Profile;
-import com.skillbridge.domain.profile.ProfileRequest;
-import com.skillbridge.domain.profile.ProfileResponse;
-import com.skillbridge.domain.profile.SkillResponse;
-import com.skillbridge.domain.profile.TechnicianSkill;
+import com.skillbridge.profile.*;
 
 import io.micrometer.common.util.StringUtils;
 

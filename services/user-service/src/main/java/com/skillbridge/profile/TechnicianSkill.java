@@ -1,4 +1,4 @@
-package com.skillbridge.domain.profile;
+package com.skillbridge.profile;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

@@ -1,4 +1,4 @@
-package com.skillbridge.domain.user;
+package com.skillbridge.user;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.skillbridge.domain.profile.*;
+import com.skillbridge.profile.*;
 
 @ExtendWith(MockitoExtension.class)
 class UserMapperTest {

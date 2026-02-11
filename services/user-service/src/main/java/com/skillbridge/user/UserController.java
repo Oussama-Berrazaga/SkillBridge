@@ -1,4 +1,4 @@
-package com.skillbridge.domain.user;
+package com.skillbridge.user;
 
 import java.util.List;
 

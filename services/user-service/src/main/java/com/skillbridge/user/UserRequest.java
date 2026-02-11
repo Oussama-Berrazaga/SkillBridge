@@ -1,6 +1,6 @@
-package com.skillbridge.domain.user;
+package com.skillbridge.user;
 
-import com.skillbridge.domain.profile.ProfileRequest;
+import com.skillbridge.profile.ProfileRequest;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

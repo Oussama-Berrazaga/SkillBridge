@@ -1,10 +1,10 @@
-package com.skillbridge.domain.profile;
+package com.skillbridge.profile;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.skillbridge.domain.user.User;
+import com.skillbridge.user.User;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
