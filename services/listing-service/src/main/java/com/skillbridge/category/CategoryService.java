@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.skillbridge.exception.CategoryNotFoundException;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -54,7 +55,7 @@ public class CategoryService {
     return mapper.toCategoryResponse(repository.save(existingCategory));
   }
 
-  public void deleteCategory(Long id) {
+  public void deleteCategory(@NotNull Long id) {
     repository.deleteById(id);
   }
 

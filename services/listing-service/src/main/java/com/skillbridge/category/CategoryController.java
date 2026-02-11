@@ -3,6 +3,8 @@ package com.skillbridge.category;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
 
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @RequiredArgsConstructor
 @RestController
@@ -37,18 +40,18 @@ public class CategoryController {
   }
 
   @PostMapping
-  public ResponseEntity<CategoryResponse> createCategory(CategoryRequest request) {
+  public ResponseEntity<CategoryResponse> createCategory(@RequestBody @Valid CategoryRequest request) {
     return ResponseEntity.ok(service.createCategory(request));
   }
 
   @PutMapping("/{categoryId}")
   public ResponseEntity<CategoryResponse> updateCategory(@PathParam("categoryId") Long categoryId,
-      CategoryRequest request) {
+      @RequestBody @Valid CategoryRequest request) {
     return ResponseEntity.ok(service.updateCategory(categoryId, request));
   }
 
   @DeleteMapping("/{categoryId}")
-  public ResponseEntity<Void> deleteCategory(@PathParam("categoryId") Long categoryId) {
+  public ResponseEntity<Void> deleteCategory(@PathParam("categoryId") @NotNull Long categoryId) {
     service.deleteCategory(categoryId);
     return ResponseEntity.noContent().build();
   }

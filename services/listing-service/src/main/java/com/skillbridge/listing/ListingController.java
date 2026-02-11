@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
@@ -20,7 +21,7 @@ public class ListingController {
   private final ListingService listingService;
 
   @PostMapping
-  public ResponseEntity<ListingResponse> create(@RequestBody ListingRequest request) {
+  public ResponseEntity<ListingResponse> create(@RequestBody @Valid ListingRequest request) {
     return ResponseEntity.status(HttpStatus.CREATED)
         .body(listingService.createListing(request));
   }

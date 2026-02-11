@@ -30,4 +30,12 @@ public class GlobalExceptionHandler {
     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
         .body(new ApiErrorResponse(400, "Validation Failed", errors));
   }
+
+  // 3. The "Safety Net" - catches everything else
+  @ExceptionHandler(Exception.class)
+  public ResponseEntity<ApiErrorResponse> handleGeneral(Exception exp) {
+    // Log the actual error for debugging, but hide details from the user
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .body(new ApiErrorResponse(500, "An unexpected error occurred", null));
+  }
 }
