@@ -22,4 +22,13 @@ public class CategoryMapper {
     // Parent will be set in the service layer after fetching the parent category
     return category;
   }
+
+  public CategoryParentResponse toCategoryParentResponse(Category category) {
+    return new CategoryParentResponse(
+        category.getId(),
+        category.getName(),
+        category.getDescription(),
+        category.getIconCode(),
+        category.getSubCategories().stream().map(this::toCategoryResponse).toList());
+  }
 }

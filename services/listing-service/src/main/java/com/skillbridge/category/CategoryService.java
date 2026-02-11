@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.skillbridge.exception.CategoryNotFoundException;
+
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
@@ -29,16 +31,24 @@ public class CategoryService {
     return repository.findAll().stream().map(mapper::toCategoryResponse).toList();
   }
 
+  public List<CategoryParentResponse> getCategoryTree() {
+    // 1. Fetch only categories where parent is NULL (the roots)
+    List<Category> categoryRoots = repository.findAllRootCategoriesWithChildren();
+    // 2. Map those roots to CategoryParentResponse
+    // 3. The recursive mapper will handle the rest of the branches!
+    return categoryRoots.stream().map(mapper::toCategoryParentResponse).toList();
+  }
+
   public CategoryResponse updateCategory(Long id, CategoryRequest updatedCategory) {
     Category existingCategory = repository.findById(id)
-        .orElseThrow(() -> new EntityNotFoundException("Category not found with id: " + id));
+        .orElseThrow(() -> new CategoryNotFoundException("Category not found with id: " + id));
     existingCategory.setName(updatedCategory.name());
     existingCategory.setDescription(updatedCategory.description());
     existingCategory.setIconCode(updatedCategory.iconCode());
     existingCategory.setParent(updatedCategory.parentId() != null
         ? repository.findById(updatedCategory.parentId())
             .orElseThrow(
-                () -> new EntityNotFoundException("Parent category not found with id: " + updatedCategory.parentId()))
+                () -> new CategoryNotFoundException("Parent category not found with id: " + updatedCategory.parentId()))
         : null);
     // Parent will be set in the service layer after fetching the parent category
     return mapper.toCategoryResponse(repository.save(existingCategory));

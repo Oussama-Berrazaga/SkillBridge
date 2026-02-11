@@ -26,6 +26,11 @@ public class CategoryController {
     return ResponseEntity.ok(service.getAllCategories());
   }
 
+  @GetMapping("/tree")
+  public ResponseEntity<List<CategoryParentResponse>> getCategoryTree() {
+    return ResponseEntity.ok(service.getCategoryTree());
+  }
+
   @GetMapping("/{categoryId}")
   public ResponseEntity<CategoryResponse> getCategoryById(@PathParam("categoryId") Long categoryId) {
     return ResponseEntity.ok(service.getCategoryById(categoryId));
