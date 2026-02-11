@@ -10,7 +10,7 @@ import com.skillbridge.category.Category;
 @Component
 public class ListingMapper {
 
-  public ListingResponse fromListing(Listing listing) {
+  public ListingResponse toListingResponse(Listing listing) {
     return new ListingResponse(
         listing.getId(),
         listing.getTitle(),

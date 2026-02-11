@@ -5,14 +5,15 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.skillbridge.category.CategoryRepository;
 import com.skillbridge.common.Status;
 import com.skillbridge.exception.CategoryNotFoundException;
-
-import jakarta.persistence.EntityNotFoundException;
 
 import com.skillbridge.category.Category;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +43,7 @@ public class ListingService {
     // 3. Save and Return
     Listing saved = listingRepository.save(listing);
 
-    return listingMapper.fromListing(saved);
+    return listingMapper.toListingResponse(saved);
   }
 
   private Set<Category> validateAndGetCategories(Set<Long> categoryIds) {
@@ -65,7 +66,29 @@ public class ListingService {
 
   public List<ListingResponse> getAllListings() {
     return listingRepository.findAll().stream()
-        .map(listingMapper::fromListing)
+        .map(listingMapper::toListingResponse)
         .toList();
   }
+
+  public Page<ListingResponse> searchListings(String title, Status status, Long categoryId, Pageable pageable) {
+    // Start with an 'unrestricted' spec (basically 1=1 in SQL)
+    Specification<Listing> spec = Specification.unrestricted();
+
+    // Chain the filters only if the parameters are provided
+    if (title != null && !title.isBlank()) {
+      spec = spec.and(ListingSpecifications.hasTitleLike(title));
+    }
+
+    if (status != null) {
+      spec = spec.and(ListingSpecifications.hasStatus(status));
+    }
+
+    if (categoryId != null) {
+      spec = spec.and(ListingSpecifications.belongsToCategory(categoryId));
+    }
+
+    return listingRepository.findAll(spec, pageable)
+        .map(listingMapper::toListingResponse);
+  }
+
 }
