@@ -13,6 +13,10 @@ spring:
               uri: lb://USER-SERVICE # lb = Load Balanced via Eureka
               predicates:
                 - Path=/api/v1/users/**
+            - id: listing-service
+              uri: lb://LISTING-SERVICE
+              predicates:
+                - Path=/api/v1/listings/**, /api/v1/categories/**, /api/v1/applications/**
 logging:
   level:
     org.springframework.cloud.gateway: TRACE

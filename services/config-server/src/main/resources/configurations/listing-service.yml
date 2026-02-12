@@ -1,5 +1,5 @@
 server:
-  port: 8091
+  port: 8092
 logging:
   level:
     root: INFO
@@ -9,7 +9,7 @@ logging:
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5433/sbuser
+    url: jdbc:postgresql://localhost:5433/sblisting
     username: oussema
     password: oussema
   jpa:
@@ -26,3 +26,13 @@ spring:
     baseline-version: 0
     baseline-description: "init"
     locations: classpath:db/migration
+  # jpa:
+  #   database-platform: org.hibernate.dialect.PostgreSQLDialect
+  #   hibernate:
+  #     ddl-auto: validate
+  #   show-sql: true
+  #   properties:
+  #     hibernate:
+  #       format_sql: true
+  #       jakarta.persistence.schema-generation.scripts.action: create
+  #       jakarta.persistence.schema-generation.scripts.create-target: generated_schema.sql
