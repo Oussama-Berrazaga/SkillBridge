@@ -16,7 +16,7 @@ spring:
             - id: listing-service
               uri: lb://LISTING-SERVICE
               predicates:
-                - Path=/api/v1/listings/**, /api/v1/categories/**
+                - Path=/api/v1/listings/**, /api/v1/categories/**, /api/v1/applications/**
 logging:
   level:
     org.springframework.cloud.gateway: TRACE
