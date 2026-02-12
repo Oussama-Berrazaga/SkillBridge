@@ -12,11 +12,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.skillbridge.category.CategoryRepository;
-import com.skillbridge.common.Status;
+import com.skillbridge.exception.ApplicationNotFoundException;
 import com.skillbridge.exception.CategoryNotFoundException;
+import com.skillbridge.exception.ListingNotFoundException;
 import com.skillbridge.exception.UserNotFoundException;
 import com.skillbridge.external.UserServiceClient;
+import com.skillbridge.proposal.Proposal;
 
+import jakarta.persistence.EntityNotFoundException;
+
+import com.skillbridge.application.Application;
+import com.skillbridge.application.ApplicationMapper;
+import com.skillbridge.application.ApplicationRepository;
+import com.skillbridge.application.ApplicationStatus;
 import com.skillbridge.category.Category;
 import lombok.RequiredArgsConstructor;
 
@@ -28,6 +36,7 @@ public class ListingService {
   private final CategoryRepository categoryRepository;
   private final ListingMapper listingMapper;
   private final UserServiceClient userServiceClient;
+  private final ApplicationRepository applicationRepository;
 
   @Transactional
   public ListingResponse createListing(ListingRequest request) {
@@ -46,7 +55,7 @@ public class ListingService {
         .title(request.title())
         .description(request.description())
         .customerId(request.customerId())
-        .status(Status.DRAFT)
+        .status(ListingStatus.DRAFT)
         .categories(categories)
         .build();
 
@@ -80,7 +89,7 @@ public class ListingService {
         .toList();
   }
 
-  public Page<ListingResponse> searchListings(String title, Status status, Long categoryId, Pageable pageable) {
+  public Page<ListingResponse> searchListings(String title, ListingStatus status, Long categoryId, Pageable pageable) {
     // Start with an 'unrestricted' spec (basically 1=1 in SQL)
     Specification<Listing> spec = Specification.unrestricted();
 

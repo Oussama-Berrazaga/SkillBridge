@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.skillbridge.common.Status;
-
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
@@ -40,7 +38,7 @@ public class ListingController {
   @GetMapping("/search")
   public ResponseEntity<Page<ListingResponse>> search(
       @RequestParam(required = false) String title,
-      @RequestParam(required = false) Status status,
+      @RequestParam(required = false) ListingStatus status,
       @RequestParam(required = false) Long categoryId,
       @PageableDefault(size = 10) Pageable pageable) {
     return ResponseEntity.ok(listingService.searchListings(title, status, categoryId, pageable));
