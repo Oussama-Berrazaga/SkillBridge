@@ -24,6 +24,16 @@ public class GlobalExceptionHandler {
         .body(new ApiErrorResponse(404, exp.getMessage(), null));
   }
 
+  @ExceptionHandler(ListingNotFoundException.class)
+  public ResponseEntity<ApiErrorResponse> handle(ListingNotFoundException exp) {
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiErrorResponse(404, exp.getMessage(), null));
+  }
+
+  @ExceptionHandler(ApplicationNotFoundException.class)
+  public ResponseEntity<ApiErrorResponse> handle(ApplicationNotFoundException exp) {
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiErrorResponse(404, exp.getMessage(), null));
+  }
+
   @ExceptionHandler(MethodArgumentNotValidException.class)
   public ResponseEntity<ApiErrorResponse> handleValidation(MethodArgumentNotValidException exp) {
     var errors = new HashMap<String, String>();
@@ -37,6 +47,17 @@ public class GlobalExceptionHandler {
         .body(new ApiErrorResponse(400, "Validation Failed", errors));
   }
 
+  @ExceptionHandler(IllegalStateException.class)
+  public ResponseEntity<ApiErrorResponse> handleIllegalState(IllegalStateException exp) {
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        .body(new ApiErrorResponse(400, exp.getMessage(), null));
+  }
+
+  @ExceptionHandler(IllegalArgumentException.class)
+  public ResponseEntity<ApiErrorResponse> handleIllegalArgument(IllegalArgumentException exp) {
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        .body(new ApiErrorResponse(400, exp.getMessage(), null));
+  }
   // // 3. The "Safety Net" - catches everything else
   // @ExceptionHandler(Exception.class)
   // public ResponseEntity<ApiErrorResponse> handleGeneral(Exception exp) {
