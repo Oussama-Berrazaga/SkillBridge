@@ -8,7 +8,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.skillbridge.application.Application;
 import com.skillbridge.application.ApplicationRepository;
 import com.skillbridge.application.ApplicationStatus;
+import com.skillbridge.exception.AccessDeniedException;
 import com.skillbridge.exception.ApplicationNotFoundException;
+import com.skillbridge.exception.ProposalNotFoundException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -48,5 +50,44 @@ public class ProposalService {
 
     proposalRepository.save(proposal);
     // applicationRepository.save(application); // Often implicit via @Transactional
+  }
+
+  @Transactional
+  public void acceptProposal(Long proposalId, Long customerId) {
+    Proposal proposal = proposalRepository.findById(proposalId)
+        .orElseThrow(() -> new ProposalNotFoundException("Proposal not found"));
+
+    // Guard: Only the owner of the listing can accept the proposal
+    if (!proposal.getApplication().getListing().getCustomerId().equals(customerId)) {
+      throw new AccessDeniedException("You are not authorized to accept this proposal");
+    }
+
+    // Rich Domain transition
+    proposal.transitionTo(ProposalStatus.ACCEPTED);
+
+    // Parent update: The application is now "Locked" for payment
+    proposal.getApplication().transitionTo(ApplicationStatus.PROPOSAL_ACCEPTED);
+
+    proposalRepository.save(proposal);
+  }
+
+  @Transactional
+  public void rejectProposal(Long proposalId, Long customerId) {
+    Proposal proposal = proposalRepository.findById(proposalId)
+        .orElseThrow(() -> new ProposalNotFoundException("Proposal not found"));
+
+    // Authorization check
+    if (!proposal.getApplication().getListing().getCustomerId().equals(customerId)) {
+      throw new AccessDeniedException("Unauthorized");
+    }
+
+    // 1. Transition the Proposal to REJECTED
+    proposal.transitionTo(ProposalStatus.REJECTED);
+
+    // 2. Transition the Application back to ACCEPTED
+    // This "unlocks" the createProposal method for the technician to try again
+    proposal.getApplication().transitionTo(ApplicationStatus.ACCEPTED);
+
+    proposalRepository.save(proposal);
   }
 }
