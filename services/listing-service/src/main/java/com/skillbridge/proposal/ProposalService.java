@@ -18,9 +18,10 @@ public class ProposalService {
 
   private final ProposalRepository proposalRepository;
   private final ApplicationRepository applicationRepository;
+  private final ProposalMapper proposalMapper;
 
   @Transactional
-  public void createProposal(ProposalRequest request) {
+  public ProposalResponse createProposal(ProposalRequest request) {
     Application application = applicationRepository.findById(request.applicationId())
         .orElseThrow(() -> new ApplicationNotFoundException("Application not found"));
 
@@ -45,13 +46,13 @@ public class ProposalService {
 
     // Rich Domain: Update the parent's state
     application.transitionTo(ApplicationStatus.VISIT_PROPOSED);
-
-    proposalRepository.save(proposal);
-    // applicationRepository.save(application); // Often implicit via @Transactional
+    var savedProposal = proposalRepository.save(proposal);
+    applicationRepository.save(application);
+    return proposalMapper.toProposalResponse(savedProposal);
   }
 
   @Transactional
-  public void acceptProposal(Long proposalId, Long customerId) {
+  public ProposalResponse acceptProposal(Long proposalId, Long customerId) {
     Proposal proposal = proposalRepository.findById(proposalId)
         .orElseThrow(() -> new ProposalNotFoundException("Proposal not found"));
 
@@ -66,11 +67,11 @@ public class ProposalService {
     // Parent update: The application is now "Locked" for payment
     proposal.getApplication().transitionTo(ApplicationStatus.PROPOSAL_ACCEPTED);
 
-    proposalRepository.save(proposal);
+    return proposalMapper.toProposalResponse(proposalRepository.save(proposal));
   }
 
   @Transactional
-  public void rejectProposal(Long proposalId, Long customerId) {
+  public ProposalResponse rejectProposal(Long proposalId, Long customerId) {
     Proposal proposal = proposalRepository.findById(proposalId)
         .orElseThrow(() -> new ProposalNotFoundException("Proposal not found"));
 
@@ -86,6 +87,6 @@ public class ProposalService {
     // This "unlocks" the createProposal method for the technician to try again
     proposal.getApplication().transitionTo(ApplicationStatus.ACCEPTED);
 
-    proposalRepository.save(proposal);
+    return proposalMapper.toProposalResponse(proposalRepository.save(proposal));
   }
 }
