@@ -2,8 +2,6 @@ package com.skillbridge.listing;
 
 import org.springframework.data.jpa.domain.Specification;
 
-import com.skillbridge.common.Status;
-
 public class ListingSpecifications {
 
   public static Specification<Listing> hasTitleLike(String title) {
@@ -11,7 +9,7 @@ public class ListingSpecifications {
         : cb.like(cb.lower(root.get("title")), "%" + title.toLowerCase() + "%");
   }
 
-  public static Specification<Listing> hasStatus(Status status) {
+  public static Specification<Listing> hasStatus(ListingStatus status) {
     return (root, query, cb) -> status == null ? null : cb.equal(root.get("status"), status);
   }
 

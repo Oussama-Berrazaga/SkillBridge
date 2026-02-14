@@ -1,6 +1,5 @@
 package com.skillbridge.application;
 
-import com.skillbridge.common.ApplicationStatus;
 import com.skillbridge.listing.Listing;
 
 import jakarta.persistence.*;
@@ -23,10 +22,22 @@ public class Application {
 
   private String message;
 
+  @Setter(AccessLevel.NONE)
   @Enumerated(EnumType.STRING)
   private ApplicationStatus status; // PENDING, ACCEPTED, REJECTED
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "listing_id")
   private Listing listing;
+
+  @Version
+  private Integer version;
+
+  public void transitionTo(ApplicationStatus nextStatus) {
+    if (!this.status.canTransitionTo(nextStatus)) {
+      throw new IllegalStateException(
+          String.format("Cannot transition Application from %s to %s", this.status, nextStatus));
+    }
+    this.status = nextStatus;
+  }
 }

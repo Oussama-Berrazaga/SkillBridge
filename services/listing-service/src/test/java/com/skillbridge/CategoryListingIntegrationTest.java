@@ -1,7 +1,6 @@
 package com.skillbridge;
 
 import com.skillbridge.category.*;
-import com.skillbridge.common.Status;
 import com.skillbridge.listing.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -46,7 +45,7 @@ class CategoryListingIntegrationTest {
     Listing listing = Listing.builder()
         .title("Leaky Faucet")
         .customerId(1L)
-        .status(Status.ACTIVE)
+        .status(ListingStatus.ACTIVE)
         .categories(new HashSet<>(Set.of(sub)))
         .build();
 
