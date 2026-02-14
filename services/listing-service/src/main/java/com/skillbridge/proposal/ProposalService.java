@@ -1,7 +1,5 @@
 package com.skillbridge.proposal;
 
-import java.time.LocalDateTime;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,8 +20,8 @@ public class ProposalService {
   private final ApplicationRepository applicationRepository;
 
   @Transactional
-  public void createProposal(Long applicationId, Double fee, LocalDateTime date) {
-    Application application = applicationRepository.findById(applicationId)
+  public void createProposal(ProposalRequest request) {
+    Application application = applicationRepository.findById(request.applicationId())
         .orElseThrow(() -> new ApplicationNotFoundException("Application not found"));
 
     // Guard: Only allow proposals if chat is open or a previous proposal was
@@ -34,14 +32,14 @@ public class ProposalService {
     }
 
     // Guard: Ensure no other PENDING proposal exists
-    if (proposalRepository.existsByApplicationIdAndStatus(applicationId, ProposalStatus.PENDING)) {
+    if (proposalRepository.existsByApplicationIdAndStatus(request.applicationId(), ProposalStatus.PENDING)) {
       throw new IllegalStateException("A pending proposal already exists.");
     }
 
     Proposal proposal = Proposal.builder()
         .application(application)
-        .visitFee(fee)
-        .proposedTime(date)
+        .visitFee(request.visitFee())
+        .proposedTime(request.proposedTime())
         // status defaults to PENDING via @Builder.Default
         .build();
 

@@ -2,8 +2,11 @@ package com.skillbridge.exception;
 
 import java.util.HashMap;
 
+import javax.management.ServiceNotFoundException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -12,26 +15,16 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-  @ExceptionHandler(CategoryNotFoundException.class)
-  public ResponseEntity<ApiErrorResponse> handle(CategoryNotFoundException exp) {
+  @ExceptionHandler({
+      CategoryNotFoundException.class,
+      UserNotFoundException.class,
+      ListingNotFoundException.class,
+      ApplicationNotFoundException.class,
+      ProposalNotFoundException.class
+  })
+  public ResponseEntity<ApiErrorResponse> handleNotFound(RuntimeException exp) {
     return ResponseEntity.status(HttpStatus.NOT_FOUND)
         .body(new ApiErrorResponse(404, exp.getMessage(), null));
-  }
-
-  @ExceptionHandler(UserNotFoundException.class)
-  public ResponseEntity<ApiErrorResponse> handle(UserNotFoundException exp) {
-    return ResponseEntity.status(HttpStatus.NOT_FOUND)
-        .body(new ApiErrorResponse(404, exp.getMessage(), null));
-  }
-
-  @ExceptionHandler(ListingNotFoundException.class)
-  public ResponseEntity<ApiErrorResponse> handle(ListingNotFoundException exp) {
-    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiErrorResponse(404, exp.getMessage(), null));
-  }
-
-  @ExceptionHandler(ApplicationNotFoundException.class)
-  public ResponseEntity<ApiErrorResponse> handle(ApplicationNotFoundException exp) {
-    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiErrorResponse(404, exp.getMessage(), null));
   }
 
   @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -49,14 +42,20 @@ public class GlobalExceptionHandler {
 
   @ExceptionHandler(IllegalStateException.class)
   public ResponseEntity<ApiErrorResponse> handleIllegalState(IllegalStateException exp) {
-    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-        .body(new ApiErrorResponse(400, exp.getMessage(), null));
+    return ResponseEntity.status(HttpStatus.CONFLICT)
+        .body(new ApiErrorResponse(409, exp.getMessage(), null));
   }
 
   @ExceptionHandler(IllegalArgumentException.class)
   public ResponseEntity<ApiErrorResponse> handleIllegalArgument(IllegalArgumentException exp) {
     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
         .body(new ApiErrorResponse(400, exp.getMessage(), null));
+  }
+
+  @ExceptionHandler(ObjectOptimisticLockingFailureException.class)
+  public ResponseEntity<ApiErrorResponse> handleConflict(ObjectOptimisticLockingFailureException exp) {
+    return ResponseEntity.status(HttpStatus.CONFLICT)
+        .body(new ApiErrorResponse(409, "The data was modified by another user. Please refresh and try again.", null));
   }
   // // 3. The "Safety Net" - catches everything else
   // @ExceptionHandler(Exception.class)
@@ -74,9 +73,9 @@ public class GlobalExceptionHandler {
         .body(new ApiErrorResponse(503, cause.getMessage(), null));
   }
 
-  // Handle the specific RuntimeException from our Feign Decoder
-  @ExceptionHandler(RuntimeException.class)
-  public ResponseEntity<ApiErrorResponse> handleRuntimeException(RuntimeException exp) {
+  // Handle the specific exception from our Feign Decoder
+  @ExceptionHandler(ServiceNotFoundException.class)
+  public ResponseEntity<ApiErrorResponse> handle(ServiceNotFoundException exp) {
     // We can check the message to determine if it's a Feign error
     HttpStatus status = exp.getMessage().contains("User Service")
         ? HttpStatus.SERVICE_UNAVAILABLE

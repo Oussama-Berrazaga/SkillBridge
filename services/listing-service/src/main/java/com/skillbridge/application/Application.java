@@ -21,6 +21,7 @@ public class Application {
   private Long technicianId;
 
   private String message;
+
   @Setter(AccessLevel.NONE)
   @Enumerated(EnumType.STRING)
   private ApplicationStatus status; // PENDING, ACCEPTED, REJECTED
@@ -28,6 +29,9 @@ public class Application {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "listing_id")
   private Listing listing;
+
+  @Version
+  private Integer version;
 
   public void transitionTo(ApplicationStatus nextStatus) {
     if (!this.status.canTransitionTo(nextStatus)) {

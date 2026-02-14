@@ -45,6 +45,9 @@ public class Listing {
   @OneToMany(mappedBy = "listing", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Application> applications = new ArrayList<>();
 
+  @Version
+  private Integer version;
+
   // We use a custom method instead of a standard setter
   public void transitionTo(ListingStatus nextStatus) {
     if (!this.status.canTransitionTo(nextStatus)) {

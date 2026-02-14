@@ -1,5 +1,6 @@
 package com.skillbridge.proposal;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import com.skillbridge.application.Application;
@@ -8,6 +9,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
+@Table(name = "proposals")
 @Getter
 @Setter
 @Builder
@@ -22,7 +24,7 @@ public class Proposal {
   private Application application;
 
   private LocalDateTime proposedTime;
-  private Double visitFee;
+  private BigDecimal visitFee;
 
   @Builder.Default
   @Setter(AccessLevel.NONE)
