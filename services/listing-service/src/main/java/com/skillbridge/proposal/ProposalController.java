@@ -17,9 +17,11 @@ public class ProposalController {
     return new ResponseEntity<>(proposalService.createProposal(request), HttpStatus.CREATED);
   }
 
-  public ResponseEntity<ProposalResponse> acceptProposal(Long proposalId, Long customerId) {
-    return ResponseEntity.ok(proposalService.acceptProposal(proposalId, customerId));
-  }
+  // public ResponseEntity<ProposalResponse> acceptProposal(Long proposalId, Long
+  // customerId) {
+  // return ResponseEntity.ok(proposalService.acceptProposal(proposalId,
+  // customerId));
+  // }
 
   public ResponseEntity<ProposalResponse> rejectProposal(Long proposalId, Long customerId) {
     return ResponseEntity.ok(proposalService.rejectProposal(proposalId, customerId));

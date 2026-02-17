@@ -51,6 +51,8 @@ public class ProposalService {
     return proposalMapper.toProposalResponse(savedProposal);
   }
 
+  // this is called after the customer pays the visit fee, so we can be sure the
+  // visit is locked in and the technician can't back out
   @Transactional
   public ProposalResponse acceptProposal(Long proposalId, Long customerId) {
     Proposal proposal = proposalRepository.findById(proposalId)
