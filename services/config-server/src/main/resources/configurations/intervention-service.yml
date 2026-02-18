@@ -1,5 +1,5 @@
 server:
-  port: 8091
+  port: 8093
 logging:
   level:
     root: INFO
@@ -9,19 +9,19 @@ logging:
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5433/sbuser
+    url: jdbc:postgresql://localhost:5433/sbintervention
     username: { DB_USERNAME }
     password: { DB_PASSWORD }
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: validate
+      ddl-auto: create
     show-sql: false
     properties:
       hibernate:
         format_sql: true
   flyway:
-    enabled: true
+    enabled: false
     baseline-on-migrate: true
     baseline-version: 0
     baseline-description: "init"
