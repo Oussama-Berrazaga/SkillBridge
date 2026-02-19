@@ -110,4 +110,11 @@ public class ListingService {
         .map(listingMapper::toListingResponse);
   }
 
+  @Transactional
+  public ListingResponse activateListing(Long listingId) {
+    Listing listing = listingRepository.findById(listingId)
+        .orElseThrow(() -> new ListingNotFoundException("Listing not found with ID: " + listingId));
+    listing.transitionTo(ListingStatus.ACTIVE);
+    return listingMapper.toListingResponse(listingRepository.save(listing));
+  }
 }

@@ -23,7 +23,9 @@ public class Proposal {
   @ManyToOne(fetch = FetchType.LAZY)
   private Application application;
 
+  @Column(name = "proposed_time", nullable = false)
   private LocalDateTime proposedTime;
+  @Column(name = "visit_fee", nullable = false)
   private BigDecimal visitFee;
 
   @Builder.Default

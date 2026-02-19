@@ -1,5 +1,8 @@
 package com.skillbridge.proposal;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class ProposalMapper {
 
   public ProposalResponse toProposalResponse(Proposal proposal) {
