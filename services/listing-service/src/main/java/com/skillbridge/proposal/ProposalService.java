@@ -2,26 +2,36 @@ package com.skillbridge.proposal;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 import com.skillbridge.application.Application;
 import com.skillbridge.application.ApplicationRepository;
 import com.skillbridge.application.ApplicationStatus;
 import com.skillbridge.exception.AccessDeniedException;
 import com.skillbridge.exception.ApplicationNotFoundException;
 import com.skillbridge.exception.ProposalNotFoundException;
+import com.skillbridge.kafka.ListingEventProducer;
+import com.skillbridge.kafka.ProposalPaidEvent;
+import com.skillbridge.listing.Address;
+import com.skillbridge.listing.ListingStatus;
 
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class ProposalService {
 
   private final ProposalRepository proposalRepository;
   private final ApplicationRepository applicationRepository;
   private final ProposalMapper proposalMapper;
+  private final ListingEventProducer eventProducer;
 
   @Transactional
   public ProposalResponse createProposal(ProposalRequest request) {
+    log.info("Creating proposal for applicationId: {}", request.applicationId());
     Application application = applicationRepository.findById(request.applicationId())
         .orElseThrow(() -> new ApplicationNotFoundException("Application not found"));
 
@@ -54,7 +64,7 @@ public class ProposalService {
   // this is called after the customer pays the visit fee, so we can be sure the
   // visit is locked in and the technician can't back out
   @Transactional
-  public ProposalResponse acceptProposal(Long proposalId, Long customerId) {
+  public ProposalResponse acceptProposal(@NonNull Long proposalId, Long customerId) {
     Proposal proposal = proposalRepository.findById(proposalId)
         .orElseThrow(() -> new ProposalNotFoundException("Proposal not found"));
 
@@ -65,11 +75,77 @@ public class ProposalService {
 
     // Rich Domain transition
     proposal.transitionTo(ProposalStatus.ACCEPTED);
-
+    // TO DO: new flyway migration to add new application status "PROPOSAL_ACCEPTED"
+    // and add proposal table foreign key to application
     // Parent update: The application is now "Locked" for payment
     proposal.getApplication().transitionTo(ApplicationStatus.PROPOSAL_ACCEPTED);
 
     return proposalMapper.toProposalResponse(proposalRepository.save(proposal));
+  }
+
+  @Transactional
+  public ProposalResponse testProposalNotify(Long proposalId, Long customerId) {
+    Proposal proposal = proposalRepository.findById(proposalId)
+        .orElseThrow(() -> new ProposalNotFoundException("Proposal not found"));
+    // 2. Prepare the Event
+    ProposalPaidEvent event = new ProposalPaidEvent(
+        proposal.getId(),
+        proposal.getApplication().getListing().getId(),
+        proposal.getApplication().getListing().getCustomerId(),
+        proposal.getApplication().getTechnicianId(),
+        proposal.getVisitFee(),
+        proposal.getProposedTime(),
+        proposal.getApplication().getListing().getTitle(),
+        proposal.getApplication().getListing().getAddress().toString());
+
+    // 3. Register Post-Commit Action
+    TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+      @Override
+      public void afterCommit() {
+        eventProducer.sendProposalPaidEvent(event);
+      }
+    });
+    return proposalMapper.toProposalResponse(proposal);
+  }
+
+  @Transactional
+  public void confirmPaymentAndNotify(Long proposalId, Long customerId) {
+    // 1. Fetch and Update local state
+    Proposal proposal = proposalRepository.findById(proposalId)
+        .orElseThrow(() -> new ProposalNotFoundException("Proposal not found"));
+
+    // Guard: Only the owner of the listing can accept the proposal
+    if (!proposal.getApplication().getListing().getCustomerId().equals(customerId)) {
+      throw new AccessDeniedException("You are not authorized to accept this proposal");
+    }
+
+    // Safety check: Don't process if already accepted
+    if (proposal.getStatus() == ProposalStatus.ACCEPTED)
+      return;
+
+    proposal.transitionTo(ProposalStatus.ACCEPTED);
+    proposal.getApplication().getListing().transitionTo(ListingStatus.ASSIGNED);
+    Address addr = proposal.getApplication().getListing().getAddress();
+    String locationString = String.format("%s, %s, %s %s",
+        addr.getStreet(), addr.getCity(), addr.getState(), addr.getZipCode());
+    // 2. Prepare the Event
+    ProposalPaidEvent event = new ProposalPaidEvent(
+
+        proposal.getId(),
+        proposal.getApplication().getListing().getId(),
+        proposal.getApplication().getListing().getCustomerId(),
+        proposal.getApplication().getTechnicianId(),
+        proposal.getVisitFee(),
+        proposal.getProposedTime(), proposal.getApplication().getListing().getTitle(),
+        locationString);
+
+    // 3. Register Post-Commit Action
+    TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+      @Override
+      public void afterCommit() {
+        eventProducer.sendProposalPaidEvent(event);
+      }
+    });
   }
 
   @Transactional
@@ -90,5 +166,11 @@ public class ProposalService {
     proposal.getApplication().transitionTo(ApplicationStatus.ACCEPTED);
 
     return proposalMapper.toProposalResponse(proposalRepository.save(proposal));
+  }
+
+  public ProposalResponse getLatestProposalByApplicationId(Long applicationId) {
+    Proposal proposal = proposalRepository.findTopByApplicationIdOrderById(applicationId)
+        .orElseThrow(() -> new ProposalNotFoundException("No proposals found for this application"));
+    return proposalMapper.toProposalResponse(proposal);
   }
 }

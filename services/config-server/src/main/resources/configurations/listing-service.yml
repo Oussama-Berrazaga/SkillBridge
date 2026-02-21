@@ -10,8 +10,8 @@ spring:
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5433/sblisting
-    username: { DB_USERNAME }
-    password: { DB_PASSWORD }
+    username: oussema
+    password: oussema
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
@@ -26,6 +26,16 @@ spring:
     baseline-version: 0
     baseline-description: "init"
     locations: classpath:db/migration
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.add.type.headers: true # Helps the consumer identify the class type
+
+
   # jpa:
   #   database-platform: org.hibernate.dialect.PostgreSQLDialect
   #   hibernate:

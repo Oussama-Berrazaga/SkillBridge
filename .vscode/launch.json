@@ -67,7 +67,8 @@
             "mainClass": "com.skillbridge.gateway.GatewayServiceApplication",
             "projectName": "gateway-service",
             "args": "",
-            "envFile": "${workspaceFolder}/.env"
+            "envFile": "${workspaceFolder}/.env",
+            "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=50269 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=gateway-service"
         },
         {
             "type": "java",
@@ -76,6 +77,17 @@
             "cwd": "${workspaceFolder}",
             "mainClass": "com.skillbridge.ListingServiceApplication",
             "projectName": "listing-service",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env",
+            "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=50248 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=listing-service"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-InterventionServiceApplication<intervention-service>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.skillbridge.InterventionServiceApplication",
+            "projectName": "intervention-service",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
         }
