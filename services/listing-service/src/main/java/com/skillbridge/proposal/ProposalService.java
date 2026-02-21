@@ -88,6 +88,7 @@ public class ProposalService {
         .orElseThrow(() -> new ProposalNotFoundException("Proposal not found"));
     // 2. Prepare the Event
     ProposalPaidEvent event = new ProposalPaidEvent(
+        proposal.getApplication().getListing().getTitle(),
         proposal.getId(),
         proposal.getApplication().getListing().getId(),
         proposal.getApplication().getListing().getCustomerId(),
@@ -125,6 +126,7 @@ public class ProposalService {
 
     // 2. Prepare the Event
     ProposalPaidEvent event = new ProposalPaidEvent(
+        proposal.getApplication().getListing().getTitle(),
         proposal.getId(),
         proposal.getApplication().getListing().getId(),
         proposal.getApplication().getListing().getCustomerId(),

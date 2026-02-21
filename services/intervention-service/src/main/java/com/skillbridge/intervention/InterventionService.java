@@ -1,12 +1,18 @@
 package com.skillbridge.intervention;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import lombok.RequiredArgsConstructor;
+import com.skillbridge.kafka.ProposalPaidEvent;
 
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class InterventionService {
@@ -42,18 +48,44 @@ public class InterventionService {
     interventionRepository.deleteById(id);
   }
 
-  public InterventionResponse createIntervention(InterventionRequest request) {
+  // public InterventionResponse createIntervention(ProposalPaidEvent event) {
+  // Intervention intervention = Intervention.builder()
+  // .title(event.title())
+  // .proposalId(event.proposalId())
+  // .listingId(event.listingId())
+  // .technicianId(event.technicianId())
+  // .clientId(event.clientId())
+  // .finalPrice(event.amount())
+  // .scheduledTime(event.scheduledTime())
+  // .status(InterventionStatus.PLANNED)
+  // .build();
+  // Intervention saved = interventionRepository.save(intervention);
+  // return interventionMapper.toInterventionResponse(saved);
+  // }
+
+  @Transactional
+  public void createIntervention(ProposalPaidEvent event) {
+    // 1. Idempotency Check
+    if (interventionRepository.existsByProposalId(event.proposalId())) {
+      log.warn("⚠️ Intervention already exists for proposal {}. Skipping.", event.proposalId());
+      return;
+    }
+
+    // 2. Map Event to Entity
     Intervention intervention = Intervention.builder()
-        .title(request.title())
-        .proposalId(request.proposalId())
-        .listingId(request.listingId())
-        .technicianId(request.technicianId())
-        .clientId(request.clientId())
-        .finalPrice(request.finalPrice())
-        .scheduledTime(request.scheduledTime())
+        .title(event.title())
+        .proposalId(event.proposalId())
+        .listingId(event.listingId())
+        .technicianId(event.technicianId())
+        .clientId(event.clientId())
+        .finalPrice(event.amount())
+        .scheduledTime(event.scheduledTime())
         .status(InterventionStatus.PLANNED)
+        .createdAt(LocalDateTime.now())
         .build();
-    Intervention saved = interventionRepository.save(intervention);
-    return interventionMapper.toInterventionResponse(saved);
+
+    // 3. Save
+    interventionRepository.save(intervention);
+    log.info("✅ Intervention successfully created for Technician ID {}", event.technicianId());
   }
 }

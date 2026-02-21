@@ -9,4 +9,6 @@ import org.springframework.stereotype.Repository;
 public interface InterventionRepository extends JpaRepository<Intervention, Long> {
 
   public List<Intervention> findByTechnicianId(Long technicianId);
+
+  boolean existsByProposalId(Long proposalId);
 }

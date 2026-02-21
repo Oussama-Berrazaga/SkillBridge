@@ -39,4 +39,10 @@ public class ProposalController {
   public ResponseEntity<ProposalResponse> rejectProposal(@RequestParam Long proposalId, @RequestParam Long customerId) {
     return ResponseEntity.ok(proposalService.rejectProposal(proposalId, customerId));
   }
+
+  @PostMapping("/complete")
+  public ResponseEntity<ProposalResponse> completeProposal(@RequestParam Long proposalId,
+      @RequestParam Long customerId) {
+    return ResponseEntity.ok(proposalService.testProposalNotify(proposalId, customerId));
+  }
 }

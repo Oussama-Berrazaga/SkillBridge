@@ -10,19 +10,34 @@ spring:
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5433/sbintervention
-    username: { DB_USERNAME }
-    password: { DB_PASSWORD }
+    username: oussema
+    password: oussema
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: create
+      ddl-auto: validate
     show-sql: false
     properties:
       hibernate:
         format_sql: true
   flyway:
-    enabled: false
+    enabled: true
     baseline-on-migrate: true
     baseline-version: 0
     baseline-description: "init"
     locations: classpath:db/migration
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: intervention-group
+      auto-offset-reset: earliest
+      # Key is just a String (the Proposal ID)
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      # Value is our JSON object
+      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      properties:
+        spring.deserializer.value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
+        # Allow deserialization for your project packages
+        spring.json.trusted.packages: "com.skillbridge.*"
+        # Since the Producer might be in a different service/package, we ignore type headers
+        spring.json.value.default.type: com.skillbridge.kafka.ProposalPaidEvent
