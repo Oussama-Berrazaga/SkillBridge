@@ -12,6 +12,7 @@ import com.skillbridge.exception.ApplicationNotFoundException;
 import com.skillbridge.exception.ProposalNotFoundException;
 import com.skillbridge.kafka.ListingEventProducer;
 import com.skillbridge.kafka.ProposalPaidEvent;
+import com.skillbridge.listing.Address;
 import com.skillbridge.listing.ListingStatus;
 
 import lombok.NonNull;
@@ -88,13 +89,14 @@ public class ProposalService {
         .orElseThrow(() -> new ProposalNotFoundException("Proposal not found"));
     // 2. Prepare the Event
     ProposalPaidEvent event = new ProposalPaidEvent(
-        proposal.getApplication().getListing().getTitle(),
         proposal.getId(),
         proposal.getApplication().getListing().getId(),
         proposal.getApplication().getListing().getCustomerId(),
         proposal.getApplication().getTechnicianId(),
         proposal.getVisitFee(),
-        proposal.getProposedTime());
+        proposal.getProposedTime(),
+        proposal.getApplication().getListing().getTitle(),
+        proposal.getApplication().getListing().getAddress().toString());
 
     // 3. Register Post-Commit Action
     TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
@@ -123,16 +125,19 @@ public class ProposalService {
 
     proposal.transitionTo(ProposalStatus.ACCEPTED);
     proposal.getApplication().getListing().transitionTo(ListingStatus.ASSIGNED);
-
+    Address addr = proposal.getApplication().getListing().getAddress();
+    String locationString = String.format("%s, %s, %s %s",
+        addr.getStreet(), addr.getCity(), addr.getState(), addr.getZipCode());
     // 2. Prepare the Event
     ProposalPaidEvent event = new ProposalPaidEvent(
-        proposal.getApplication().getListing().getTitle(),
+
         proposal.getId(),
         proposal.getApplication().getListing().getId(),
         proposal.getApplication().getListing().getCustomerId(),
         proposal.getApplication().getTechnicianId(),
         proposal.getVisitFee(),
-        proposal.getProposedTime());
+        proposal.getProposedTime(), proposal.getApplication().getListing().getTitle(),
+        locationString);
 
     // 3. Register Post-Commit Action
     TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {

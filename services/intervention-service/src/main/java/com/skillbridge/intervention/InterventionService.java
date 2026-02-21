@@ -74,6 +74,7 @@ public class InterventionService {
     // 2. Map Event to Entity
     Intervention intervention = Intervention.builder()
         .title(event.title())
+        .location(event.address())
         .proposalId(event.proposalId())
         .listingId(event.listingId())
         .technicianId(event.technicianId())
