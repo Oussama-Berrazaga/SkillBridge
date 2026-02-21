@@ -89,4 +89,10 @@ public class InterventionService {
     interventionRepository.save(intervention);
     log.info("✅ Intervention successfully created for Technician ID {}", event.technicianId());
   }
+
+  public List<InterventionResponse> findInterventionByTechId(Long techId) {
+    return interventionRepository.findAllByTechnicianIdOrderByScheduledTimeAsc(techId).stream()
+        .map(interventionMapper::toInterventionResponse).toList();
+
+  }
 }
