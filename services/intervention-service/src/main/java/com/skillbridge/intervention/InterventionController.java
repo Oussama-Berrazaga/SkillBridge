@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,5 +29,15 @@ public class InterventionController {
   public ResponseEntity<List<InterventionResponse>> getTechnicianAgenda(@PathVariable Long techId) {
     log.info("Fetching agenda for technician: {}", techId);
     return ResponseEntity.ok(interventionService.findInterventionByTechId(techId));
+  }
+
+  @PatchMapping("/{id}/start")
+  public ResponseEntity<InterventionResponse> startIntervention(@PathVariable Long id) {
+    return ResponseEntity.ok(interventionService.startJob(id));
+  }
+
+  @PatchMapping("/{id}/complete")
+  public ResponseEntity<InterventionResponse> completeIntervention(@PathVariable Long id) {
+    return ResponseEntity.ok(interventionService.completeJob(id));
   }
 }

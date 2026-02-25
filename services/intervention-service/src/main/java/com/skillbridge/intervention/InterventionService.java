@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.skillbridge.kafka.ProposalPaidEvent;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,14 +30,14 @@ public class InterventionService {
 
   public InterventionResponse getInterventionById(Long id) {
     Intervention intervention = interventionRepository.findById(id)
-        .orElseThrow(() -> new RuntimeException("Intervention not found with id: " + id));
+        .orElseThrow(() -> new EntityNotFoundException("Intervention not found with id: " + id));
     return interventionMapper.toInterventionResponse(intervention);
   }
 
   public InterventionResponse updateInterventionStatus(Long id, InterventionStatus newStatus) {
     Intervention intervention = interventionRepository.findById(id)
-        .orElseThrow(() -> new RuntimeException("Intervention not found with id: " + id));
-    intervention.setStatus(newStatus);
+        .orElseThrow(() -> new EntityNotFoundException("Intervention not found with id: " + id));
+    intervention.transitionTo(newStatus);
     Intervention updated = interventionRepository.save(intervention);
     return interventionMapper.toInterventionResponse(updated);
   }
@@ -94,5 +95,13 @@ public class InterventionService {
     return interventionRepository.findAllByTechnicianIdOrderByScheduledTimeAsc(techId).stream()
         .map(interventionMapper::toInterventionResponse).toList();
 
+  }
+
+  public InterventionResponse startJob(Long id) {
+    return updateInterventionStatus(id, InterventionStatus.IN_PROGRESS);
+  }
+
+  public InterventionResponse completeJob(Long id) {
+    return updateInterventionStatus(id, InterventionStatus.COMPLETED);
   }
 }

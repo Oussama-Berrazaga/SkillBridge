@@ -36,6 +36,7 @@ public class Intervention {
 
   private BigDecimal finalPrice;
 
+  @Setter(AccessLevel.NONE)
   @Enumerated(EnumType.STRING)
   private InterventionStatus status;
 
@@ -48,11 +49,11 @@ public class Intervention {
   @Column(insertable = false)
   private LocalDateTime updatedAt;
 
-  // Lifecycle methods to handle the "In Progress" states
-  public void startIntervention() {
-    if (this.status != InterventionStatus.PLANNED) {
-      throw new IllegalStateException("Can only start a planned intervention");
+  public void transitionTo(InterventionStatus nextStatus) {
+    if (!this.status.canTransitionTo(nextStatus)) {
+      throw new IllegalStateException(
+          String.format("Impossible transition from %s to %s", this.status, nextStatus));
     }
-    this.status = InterventionStatus.IN_PROGRESS;
+    this.status = nextStatus;
   }
 }
