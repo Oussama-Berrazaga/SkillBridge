@@ -49,11 +49,22 @@ public class Intervention {
   @Column(insertable = false)
   private LocalDateTime updatedAt;
 
+  private LocalDateTime startedAt;
+  private LocalDateTime completedAt;
+
   public void transitionTo(InterventionStatus nextStatus) {
     if (!this.status.canTransitionTo(nextStatus)) {
       throw new IllegalStateException(
-          String.format("Impossible transition from %s to %s", this.status, nextStatus));
+          String.format("Invalid transition from %s to %s", this.status, nextStatus));
     }
+
+    // Logic for automatic timestamps
+    if (nextStatus == InterventionStatus.IN_PROGRESS && this.startedAt == null) {
+      this.startedAt = LocalDateTime.now();
+    } else if (nextStatus == InterventionStatus.COMPLETED) {
+      this.completedAt = LocalDateTime.now();
+    }
+
     this.status = nextStatus;
   }
 }
