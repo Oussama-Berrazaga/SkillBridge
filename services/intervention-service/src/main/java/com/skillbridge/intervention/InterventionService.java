@@ -92,7 +92,9 @@ public class InterventionService {
   }
 
   public List<InterventionResponse> findInterventionByTechId(Long techId) {
-    return interventionRepository.findAllByTechnicianIdOrderByScheduledTimeAsc(techId).stream()
+    List<Intervention> interventions = interventionRepository.findAllByTechnicianIdOrderByScheduledTimeAsc(techId);
+    // TODO change logic to return AgendaItem List instead
+    return interventions.stream()
         .map(interventionMapper::toInterventionResponse).toList();
 
   }

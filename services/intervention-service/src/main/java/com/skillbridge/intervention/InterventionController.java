@@ -40,4 +40,5 @@ public class InterventionController {
   public ResponseEntity<InterventionResponse> completeIntervention(@PathVariable Long id) {
     return ResponseEntity.ok(interventionService.completeJob(id));
   }
+
 }
