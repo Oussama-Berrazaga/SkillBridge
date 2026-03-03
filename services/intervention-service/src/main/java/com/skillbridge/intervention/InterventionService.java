@@ -1,11 +1,16 @@
 package com.skillbridge.intervention;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.kafka.clients.ClientResponse;
 import org.springframework.stereotype.Service;
 
+import com.skillbridge.external.UserResponse;
+import com.skillbridge.external.UserServiceClient;
+import com.skillbridge.intervention.AgendaItemResponse.ClientDTO;
 import com.skillbridge.kafka.ProposalPaidEvent;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -20,6 +25,7 @@ public class InterventionService {
 
   private final InterventionRepository interventionRepository;
   private final InterventionMapper interventionMapper;
+  private final UserServiceClient userServiceClient;
 
   public List<InterventionResponse> getInterventionsByTechnicianId(Long technicianId) {
     List<Intervention> interventions = interventionRepository.findByTechnicianId(technicianId);
@@ -91,12 +97,26 @@ public class InterventionService {
     log.info("✅ Intervention successfully created for Technician ID {}", event.technicianId());
   }
 
-  public List<InterventionResponse> findInterventionByTechId(Long techId) {
+  public List<AgendaItemResponse> findInterventionByTechId(Long techId) {
     List<Intervention> interventions = interventionRepository.findAllByTechnicianIdOrderByScheduledTimeAsc(techId);
-    // TODO change logic to return AgendaItem List instead
-    return interventions.stream()
-        .map(interventionMapper::toInterventionResponse).toList();
 
+    List<AgendaItemResponse> agenda = interventions.stream().map(intervention -> {
+      UserResponse client = userServiceClient.getUserById(intervention.getClientId());
+      ClientDTO clientDTO = new AgendaItemResponse.ClientDTO(
+          client.id(), client.profile().firstName() + " " + client.profile().lastName(),
+          client.profile().phoneNumber());
+
+      AgendaItemResponse agendaItemResponse = new AgendaItemResponse(
+          intervention.getId(),
+          intervention.getStatus(),
+          intervention.getScheduledTime(),
+          intervention.getTitle(),
+          clientDTO,
+          intervention.getLocation());
+      return agendaItemResponse;
+    }).toList();
+
+    return agenda;
   }
 
   public InterventionResponse startJob(Long id) {

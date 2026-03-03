@@ -26,7 +26,7 @@ public class InterventionController {
   }
 
   @GetMapping("/technician/{techId}")
-  public ResponseEntity<List<InterventionResponse>> getTechnicianAgenda(@PathVariable Long techId) {
+  public ResponseEntity<List<AgendaItemResponse>> getTechnicianAgenda(@PathVariable Long techId) {
     log.info("Fetching agenda for technician: {}", techId);
     return ResponseEntity.ok(interventionService.findInterventionByTechId(techId));
   }

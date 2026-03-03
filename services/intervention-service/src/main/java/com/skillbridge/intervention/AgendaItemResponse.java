@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 public record AgendaItemResponse(
     Long interventionId,
-    String status,
+    InterventionStatus status,
     LocalDateTime scheduledTime,
     String listingTitle,
     ClientDTO client,

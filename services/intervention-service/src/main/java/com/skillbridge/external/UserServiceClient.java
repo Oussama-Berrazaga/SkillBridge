@@ -7,7 +7,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 @FeignClient(name = "user-service") // It looks up the URL from Eureka
 public interface UserServiceClient {
 
-  @GetMapping("/api/v1/users/exists/{id}")
-  boolean checkUserExists(@PathVariable("id") Long id);
+  // @GetMapping("/api/v1/users/exists/{id}")
+  // boolean checkUserExists(@PathVariable("id") Long id);
 
+  @GetMapping("/api/v1/users/{id}")
+  UserResponse getUserById(@PathVariable("id") Long id);
 }
