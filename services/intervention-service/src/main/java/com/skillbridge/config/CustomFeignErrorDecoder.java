@@ -1,4 +1,4 @@
-package com.skillbridge.external;
+package com.skillbridge.config;
 
 import javax.management.ServiceNotFoundException;
 

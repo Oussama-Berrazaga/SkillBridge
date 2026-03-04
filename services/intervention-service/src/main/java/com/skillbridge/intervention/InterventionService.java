@@ -8,10 +8,10 @@ import java.util.stream.Collectors;
 import org.apache.kafka.clients.ClientResponse;
 import org.springframework.stereotype.Service;
 
-import com.skillbridge.external.UserResponse;
-import com.skillbridge.external.UserServiceClient;
 import com.skillbridge.intervention.AgendaItemResponse.ClientDTO;
 import com.skillbridge.kafka.ProposalPaidEvent;
+import com.skillbridge.user.UserResponse;
+import com.skillbridge.user.UserServiceClient;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;

@@ -1,4 +1,4 @@
-package com.skillbridge.external;
+package com.skillbridge.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

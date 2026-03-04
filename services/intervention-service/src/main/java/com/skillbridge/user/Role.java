@@ -1,4 +1,4 @@
-package com.skillbridge.external;
+package com.skillbridge.user;
 
 public enum Role {
     CLIENT,
