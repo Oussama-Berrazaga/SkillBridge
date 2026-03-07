@@ -26,3 +26,8 @@ spring:
     baseline-version: 0
     baseline-description: "init"
     locations: classpath:db/migration
+application:
+  security:
+    jwt:
+      secret-key: 8qawA7iafAvGyLtKrm85wCfKs37neK8fflMq7TcvRj8= # generate with: openssl rand -base64 32
+      expiration: 86400000 # 24 hours in ms

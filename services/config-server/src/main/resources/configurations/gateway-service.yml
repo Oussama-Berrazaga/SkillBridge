@@ -1,5 +1,9 @@
 server:
   port: 8222
+application:
+  security:
+    jwt:
+      secret-key: 8qawA7iafAvGyLtKrm85wCfKs37neK8fflMq7TcvRj8 # must match user-service
 spring:
   cloud:
     gateway:
