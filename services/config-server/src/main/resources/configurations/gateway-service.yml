@@ -16,7 +16,7 @@ spring:
             - id: user-service
               uri: lb://USER-SERVICE # lb = Load Balanced via Eureka
               predicates:
-                - Path=/api/v1/users/**
+                - Path=/api/v1/users/**, /api/v1/auth/**
             - id: listing-service
               uri: lb://LISTING-SERVICE
               predicates:

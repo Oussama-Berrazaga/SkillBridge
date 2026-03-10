@@ -3,6 +3,8 @@ package com.skillbridge.gateway.filter;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
@@ -13,18 +15,18 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
-import java.security.Key;
 import java.util.Base64;
 import java.util.List;
 
 import javax.crypto.SecretKey;
 
+@Slf4j
 @Component
 public class JwtAuthenticationFilter implements GlobalFilter, Ordered {
 
   // Public endpoints that don't require a token
   private static final List<String> PUBLIC_PATHS = List.of(
-      "/api/v1/auth/login",
+      "/api/v1/auth/",
       "/api/v1/users/register");
 
   @Value("${application.security.jwt.secret-key}")
@@ -36,6 +38,7 @@ public class JwtAuthenticationFilter implements GlobalFilter, Ordered {
 
     // Skip filter for public endpoints
     if (PUBLIC_PATHS.stream().anyMatch(path::startsWith)) {
+      log.info("HIT PUBLIC PATH REQUEST " + path);
       return chain.filter(exchange);
     }
 
