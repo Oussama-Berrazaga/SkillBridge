@@ -1,0 +1,8 @@
+$kind: collection
+name: Intervention
+auth:
+  - id: e8c77168-6241-4417-9c3c-19f029cd4d17
+    type: bearer
+    name: Bearer Token
+    credentials:
+      token: "{{user_token}}"

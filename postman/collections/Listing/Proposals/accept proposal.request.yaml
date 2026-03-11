@@ -1,0 +1,9 @@
+$kind: http-request
+name: accept proposal
+url: '{{base_url}}/proposals/accept'
+method: POST
+queryParams:
+  - key: proposalId
+    value: ''
+  - key: customerId
+    value: ''

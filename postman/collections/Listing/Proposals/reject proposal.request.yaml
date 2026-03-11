@@ -1,0 +1,9 @@
+$kind: http-request
+name: reject proposal
+url: '{{base_url}}/proposals/reject'
+method: POST
+queryParams:
+  - key: proposalId
+    value: ''
+  - key: customerId
+    value: ''

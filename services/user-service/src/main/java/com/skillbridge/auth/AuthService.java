@@ -35,9 +35,9 @@ public class AuthService {
 
   public AuthResponse register(RegisterRequest request) {
     User user = User.builder()
-        .email(request.getEmail())
-        .password(passwordEncoder.encode(request.getPassword()))
-        .role(request.getRole())
+        .email(request.email())
+        .password(passwordEncoder.encode(request.password()))
+        .role(request.role())
         .build();
 
     userRepository.save(user);

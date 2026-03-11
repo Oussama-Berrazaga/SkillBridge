@@ -1,0 +1,5 @@
+$kind: http-request
+name: Get all categories
+url: "{{base_url}}/categories"
+method: GET
+order: 1773185585549

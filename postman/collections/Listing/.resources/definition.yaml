@@ -1,0 +1,8 @@
+$kind: collection
+name: Listing
+auth:
+  - id: 1e7a8499-e1c0-447d-a8c4-d68e51560521
+    type: bearer
+    name: Bearer Token
+    credentials:
+      token: "{{user_token}}"

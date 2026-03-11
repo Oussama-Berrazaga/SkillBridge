@@ -1,0 +1,5 @@
+$kind: http-request
+name: Activate listing by id
+url: "{{base_url}}/listings/activate/1"
+method: POST
+order: 1769552854063835

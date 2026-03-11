@@ -1,0 +1,5 @@
+$kind: http-request
+name: Get technician interventions agenda
+url: "{{base_url}}/interventions/technician/5"
+method: GET
+order: 1773215718769

@@ -1,0 +1,5 @@
+$kind: http-request
+name: Start intervention
+url: "{{base_url}}/1/start"
+method: PATCH
+order: 1472694510981823

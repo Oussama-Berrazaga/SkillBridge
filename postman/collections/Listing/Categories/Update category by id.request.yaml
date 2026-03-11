@@ -1,0 +1,14 @@
+$kind: http-request
+name: Update category by id
+url: "{{base_url}}/categories/1"
+method: PUT
+body:
+  type: json
+  content: |-
+    {
+      "name":"",
+      "description":"",
+      "iconCode":"",
+      "parentId":1
+    }
+order: 1934503009866172

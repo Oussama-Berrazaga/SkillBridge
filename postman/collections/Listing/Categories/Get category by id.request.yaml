@@ -1,0 +1,5 @@
+$kind: http-request
+name: Get category by id
+url: "{{base_url}}/categories/1"
+method: GET
+order: 739053491390511

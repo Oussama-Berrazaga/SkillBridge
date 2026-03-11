@@ -1,0 +1,5 @@
+$kind: http-request
+name: Complete intervention
+url: "{{base_url}}/1/complete"
+method: PATCH
+order: 1788749693704055

@@ -1,0 +1,20 @@
+$kind: http-request
+name: Login
+url: "{{base_url}}/auth/login"
+method: POST
+body:
+  type: json
+  content: |-
+    {
+        "email": "john.doe@yopmail.com",
+        "password": "Test@123"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      var jsonData = pm.response.json();
+
+      pm.globals.set("user_token",jsonData.token);
+      pm.globals.set("user_role",jsonData.role);
+    language: text/javascript
+order: 1773184719083

@@ -1,0 +1,8 @@
+$kind: http-request
+name: Register
+url: "{{base_url}}/auth/register"
+method: POST
+body:
+  type: json
+  content: ""
+order: 2702291361899010

@@ -1,0 +1,5 @@
+$kind: http-request
+name: Delete category by id
+url: "{{base_url}}/categories/1"
+method: DELETE
+order: 1021625720443250

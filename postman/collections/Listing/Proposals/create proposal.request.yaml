@@ -1,0 +1,13 @@
+$kind: http-request
+name: create proposal
+url: "{{base_url}}/proposals/create"
+method: POST
+body:
+  type: json
+  content: |-
+    {
+      "applicationId": 1,
+      "visitFee": 100.00,
+      "proposedTime": "2026-04-01T10:00:00"
+    }
+order: 4171907712780541

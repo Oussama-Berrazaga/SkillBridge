@@ -1,0 +1,5 @@
+$kind: http-request
+name: Get all categories tree
+url: "{{base_url}}/categories/tree"
+method: GET
+order: 2538947829924630
