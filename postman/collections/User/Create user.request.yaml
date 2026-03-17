@@ -1,0 +1,23 @@
+$kind: http-request
+name: Create user
+url: "{{base_url}}/users"
+method: POST
+body:
+  type: json
+  content: |-
+    {
+      "email": "john.smith@yopmail.com",
+      "password": "Test@123",
+      "role": "CLIENT",
+      "profile": {
+        "firstName": "John",
+        "lastName": "Smith",
+        "phoneNumber": "54816013",
+        "birthDate": "01/01/1990",
+        "bio": "Hello",
+        "skills": {
+      
+        }
+      }
+    }
+order: 4063657089772880

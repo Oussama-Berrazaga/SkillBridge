@@ -1,2 +1,8 @@
 name: Globals
-values: []
+values:
+  - key: user_token
+    value: ''
+    enabled: true
+  - key: user_role
+    value: ''
+    enabled: true

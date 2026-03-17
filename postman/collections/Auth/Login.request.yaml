@@ -14,7 +14,8 @@ scripts:
     code: |-
       var jsonData = pm.response.json();
 
-      pm.globals.set("user_token",jsonData.token);
-      pm.globals.set("user_role",jsonData.role);
+      pm.environment.set("user_token",jsonData.token);
+      pm.environment.set("user_role",jsonData.role);
+      pm.environment.set("user_id",jsonData.userId);
     language: text/javascript
 order: 1773184719083
