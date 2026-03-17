@@ -104,9 +104,9 @@ Intervention marked as completed → Listing archived
 - [x] User Profile entity (with role: CLIENT, TECHNICIAN, SUPPORT, ADMIN)
 - [x] Register endpoint
 - [x] Login endpoint (returns JWT)
-- [ ] Spring Security — JWT filter chain
-- [ ] Secure endpoints by role via Gateway
-- [ ] Propagate JWT to downstream services (OpenFeign interceptor)
+- [x] Spring Security — JWT filter chain
+- [x] Secure endpoints by role via Gateway
+- [x] Propagate JWT to downstream services (OpenFeign interceptor)
 
 ---
 
