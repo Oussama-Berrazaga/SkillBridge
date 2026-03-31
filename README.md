@@ -126,7 +126,7 @@ Intervention marked as completed → Listing archived
 - [x] Kafka consumer — listens for `ProposalPaidEvent` to create intervention
 - [x] Technician agenda (list of interventions)
 - [x] OpenFeign integration with User Service for technician data
-- [ ] Intervention status transitions (started → completed)
+- [x] Intervention status transitions (started → completed)
 - [ ] Extra fee request flow
 - [ ] Client confirmation of completion
 

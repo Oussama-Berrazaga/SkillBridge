@@ -40,9 +40,25 @@ public class InterventionService {
     return interventionMapper.toInterventionResponse(intervention);
   }
 
-  public InterventionResponse updateInterventionStatus(Long id, InterventionStatus newStatus) {
+  public InterventionResponse updateInterventionStatus(Long id, InterventionStatus newStatus, Long userId,
+      String role) {
+
     Intervention intervention = interventionRepository.findById(id)
         .orElseThrow(() -> new EntityNotFoundException("Intervention not found with id: " + id));
+    // check if the user is authorized to update the intervention
+    boolean isAuthorized = false;
+    if (role.equals("TECHNICIAN") && intervention.getTechnicianId().equals(userId)) {
+      isAuthorized = true;
+    } else if (role.equals("CLIENT") && intervention.getClientId().equals(userId)) {
+      isAuthorized = true;
+    } else if (role.equals("ADMIN") || role.equals("SUPPORT")) {
+      isAuthorized = true;
+    }
+
+    if (!isAuthorized) {
+      throw new RuntimeException("Unauthorized to update this intervention");
+    }
+
     intervention.transitionTo(newStatus);
     Intervention updated = interventionRepository.save(intervention);
     return interventionMapper.toInterventionResponse(updated);
@@ -119,11 +135,12 @@ public class InterventionService {
     return agenda;
   }
 
-  public InterventionResponse startJob(Long id) {
-    return updateInterventionStatus(id, InterventionStatus.IN_PROGRESS);
+  public InterventionResponse startJob(Long id, Long userId, String role) {
+    return updateInterventionStatus(id, InterventionStatus.IN_PROGRESS, userId, role);
   }
 
-  public InterventionResponse completeJob(Long id) {
-    return updateInterventionStatus(id, InterventionStatus.COMPLETED);
+  public InterventionResponse completeJob(Long id, Long userId, String role) {
+    return updateInterventionStatus(id, InterventionStatus.COMPLETED, userId, role);
   }
+
 }
