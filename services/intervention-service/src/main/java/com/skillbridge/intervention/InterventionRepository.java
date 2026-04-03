@@ -10,6 +10,8 @@ public interface InterventionRepository extends JpaRepository<Intervention, Long
 
   public List<Intervention> findByTechnicianId(Long technicianId);
 
+  public List<Intervention> findByClientId(Long clientId);
+
   boolean existsByProposalId(Long proposalId);
 
   // Finds all interventions for a tech, sorted by date

@@ -21,9 +21,20 @@ public class InterventionController {
 
   private final InterventionService interventionService;
 
-  @GetMapping("/my-interventions")
-  public ResponseEntity<List<InterventionResponse>> getMyInterventions(Long technicianId) {
-    return ResponseEntity.ok(interventionService.getInterventionsByTechnicianId(technicianId));
+  @GetMapping
+  public ResponseEntity<List<InterventionResponse>> getMyInterventions(@RequestHeader("X-User-Id") Long userId,
+      @RequestHeader("X-User-Role") String role) {
+
+    if (role.equals("TECHNICIAN")) {
+      return ResponseEntity.ok(interventionService.getInterventionsByTechnicianId(userId));
+    } else if (role.equals("CLIENT")) {
+      return ResponseEntity.ok(interventionService.getInterventionsByClientId(userId));
+    } else if (role.equals("ADMIN") || role.equals("SUPPORT")) {
+      return ResponseEntity.ok(interventionService.getAllInterventions());
+    } else {
+      return ResponseEntity.status(403).build();
+    }
+
   }
 
   @GetMapping("/technician/{techId}")

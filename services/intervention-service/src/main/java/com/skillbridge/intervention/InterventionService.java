@@ -1,11 +1,9 @@
 package com.skillbridge.intervention;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.apache.kafka.clients.ClientResponse;
 import org.springframework.stereotype.Service;
 
 import com.skillbridge.intervention.AgendaItemResponse.ClientDTO;
@@ -29,6 +27,20 @@ public class InterventionService {
 
   public List<InterventionResponse> getInterventionsByTechnicianId(Long technicianId) {
     List<Intervention> interventions = interventionRepository.findByTechnicianId(technicianId);
+    return interventions.stream()
+        .map(interventionMapper::toInterventionResponse)
+        .collect(Collectors.toList());
+  }
+
+  public List<InterventionResponse> getInterventionsByClientId(Long clientId) {
+    List<Intervention> interventions = interventionRepository.findByClientId(clientId);
+    return interventions.stream()
+        .map(interventionMapper::toInterventionResponse)
+        .collect(Collectors.toList());
+  }
+
+  public List<InterventionResponse> getAllInterventions() {
+    List<Intervention> interventions = interventionRepository.findAll();
     return interventions.stream()
         .map(interventionMapper::toInterventionResponse)
         .collect(Collectors.toList());

@@ -1,0 +1,5 @@
+$kind: http-request
+name: Get all interventions by role
+url: "{{base_url}}/interventions"
+method: GET
+order: 1383829799309070
