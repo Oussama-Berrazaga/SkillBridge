@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.skillbridge.config.AuthUser;
+import com.skillbridge.config.CurrentUser;
+
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
@@ -27,9 +30,10 @@ public class ListingController {
   private final ListingService listingService;
 
   @PostMapping
-  public ResponseEntity<ListingResponse> create(@RequestBody @Valid ListingRequest request) {
+  public ResponseEntity<ListingResponse> create(@RequestBody @Valid ListingRequest request,
+      @CurrentUser AuthUser user) {
     return ResponseEntity.status(HttpStatus.CREATED)
-        .body(listingService.createListing(request));
+        .body(listingService.createListing(request, user.userId(), user.role()));
   }
 
   @GetMapping

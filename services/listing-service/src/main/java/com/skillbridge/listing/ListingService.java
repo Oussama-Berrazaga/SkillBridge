@@ -12,19 +12,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.skillbridge.category.CategoryRepository;
-import com.skillbridge.exception.ApplicationNotFoundException;
+import com.skillbridge.config.UserRole;
+import com.skillbridge.exception.AccessDeniedException;
 import com.skillbridge.exception.CategoryNotFoundException;
 import com.skillbridge.exception.ListingNotFoundException;
-import com.skillbridge.exception.UserNotFoundException;
-import com.skillbridge.external.UserServiceClient;
-import com.skillbridge.proposal.Proposal;
 
-import jakarta.persistence.EntityNotFoundException;
-
-import com.skillbridge.application.Application;
-import com.skillbridge.application.ApplicationMapper;
-import com.skillbridge.application.ApplicationRepository;
-import com.skillbridge.application.ApplicationStatus;
 import com.skillbridge.category.Category;
 import lombok.RequiredArgsConstructor;
 
@@ -35,16 +27,13 @@ public class ListingService {
   private final ListingRepository listingRepository;
   private final CategoryRepository categoryRepository;
   private final ListingMapper listingMapper;
-  private final UserServiceClient userServiceClient;
-  private final ApplicationRepository applicationRepository;
 
   @Transactional
-  public ListingResponse createListing(ListingRequest request) {
+  public ListingResponse createListing(ListingRequest request, Long customerId, UserRole role) {
 
-    // 1. External Validation: Check if customer exists in user-service
-    boolean userExists = userServiceClient.checkUserExists(request.customerId());
-    if (!userExists) {
-      throw new UserNotFoundException("Customer with ID " + request.customerId() + " not found in User Service");
+    // 1. External Validation: Check if the caller has the right role
+    if (role != UserRole.CLIENT && role != UserRole.ADMIN) {
+      throw new AccessDeniedException("Only users with CLIENT or ADMIN role can create listings");
     }
 
     // 2. Validate and Fetch Categories
@@ -54,7 +43,7 @@ public class ListingService {
     Listing listing = Listing.builder()
         .title(request.title())
         .description(request.description())
-        .customerId(request.customerId())
+        .customerId(customerId)
         .status(ListingStatus.DRAFT)
         .categories(categories)
         .build();
