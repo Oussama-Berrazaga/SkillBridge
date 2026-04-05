@@ -1,0 +1,13 @@
+$kind: http-request
+name: Create listing
+url: "{{base_url}}/listings"
+method: POST
+body:
+  type: json
+  content: |-
+    {
+        "title": "Samsung broken screen",
+        "description": "Samsung Galaxy S21 broken screen",
+        "categoryIds": [8]
+    }
+order: 1773185609303

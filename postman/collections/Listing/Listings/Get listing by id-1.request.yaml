@@ -2,4 +2,4 @@ $kind: http-request
 name: Get listing by id
 url: "{{base_url}}/listings/1"
 method: GET
-order: 1773185609303
+order: 643419956478915
