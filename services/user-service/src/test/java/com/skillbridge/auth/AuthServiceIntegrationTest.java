@@ -46,7 +46,7 @@ class AuthServiceIntegrationTest {
     AuthResponse response = authService.register(request);
 
     assertThat(response.token()).isNotBlank();
-    assertThat(response.role()).isEqualTo("CLIENT");
+    assertThat(response.role()).isEqualTo(Role.CLIENT.name());
     assertThat(userRepository.findByEmail("client@test.com")).isPresent();
   }
 
@@ -72,7 +72,7 @@ class AuthServiceIntegrationTest {
     AuthResponse response = authService.login(new AuthRequest("tech@test.com", "Test@123"));
 
     assertThat(response.token()).isNotBlank();
-    assertThat(response.role()).isEqualTo("TECHNICIAN");
+    assertThat(response.role()).isEqualTo(Role.TECHNICIAN.name());
   }
 
   @Test

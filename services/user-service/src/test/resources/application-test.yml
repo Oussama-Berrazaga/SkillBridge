@@ -1,16 +1,25 @@
 spring:
-  datasource:
-    url: jdbc:h2:mem:skillbridge_test;DB_CLOSE_DELAY=-1;MODE=PostgreSQL
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
+  cloud:
+    config:
+      enabled: false
+  eureka:
+    client:
+      enabled: false
+      register-with-eureka: false
+      fetch-registry: false
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: validate
     show-sql: true
     properties:
       hibernate:
         format_sql: true
-        dialect: org.hibernate.dialect.H2Dialect
   flyway:
-    enabled: false # We disable Flyway in tests to let Hibernate create the schema faster
+    enabled: true
+    locations: classpath:db/migration
+
+application:
+  security:
+    jwt:
+      secret-key: dGVzdC1zZWNyZXQta2V5LWZvci10ZXN0aW5nLW9ubHktMTIz
+      expiration: 86400000
