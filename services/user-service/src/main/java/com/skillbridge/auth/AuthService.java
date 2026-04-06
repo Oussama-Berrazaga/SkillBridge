@@ -1,5 +1,6 @@
 package com.skillbridge.auth;
 
+import com.skillbridge.exception.UserAlreadyExistsException;
 import com.skillbridge.exception.UserNotFoundException;
 import com.skillbridge.user.User;
 import com.skillbridge.user.UserRepository;
@@ -34,6 +35,9 @@ public class AuthService {
   }
 
   public AuthResponse register(RegisterRequest request) {
+    if (userRepository.existsByEmail(request.email())) {
+      throw new UserAlreadyExistsException("Email already in use: " + request.email());
+    }
     User user = User.builder()
         .email(request.email())
         .password(passwordEncoder.encode(request.password()))
