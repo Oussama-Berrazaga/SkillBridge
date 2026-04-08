@@ -2,3 +2,4 @@ skill-bridge-frontend/node_modules
 skill-bridge-frontend/dist
 skill-bridge-frontend/dist-ssr
 skill-bridge-frontend/*.local
+.DS_Store
