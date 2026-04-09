@@ -8,10 +8,12 @@ import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.skillbridge.category.CategoryRepository;
+import com.skillbridge.config.AuthUser;
 import com.skillbridge.config.UserRole;
 import com.skillbridge.exception.AccessDeniedException;
 import com.skillbridge.exception.CategoryNotFoundException;
@@ -106,9 +108,24 @@ public class ListingService {
   }
 
   @Transactional
-  public ListingResponse activateListing(Long listingId) {
+  public ListingResponse activateListing(@NonNull Long listingId, AuthUser user) {
+    // 1. External Validation: Check if the caller has the right role
+    if (user.role() != UserRole.ADMIN && user.role() != UserRole.CLIENT) {
+      throw new AccessDeniedException("Only users with ADMIN or CLIENT role can activate listings");
+    }
+
+    // 2. Fetch the listing
     Listing listing = listingRepository.findById(listingId)
         .orElseThrow(() -> new ListingNotFoundException("Listing not found with ID: " + listingId));
+
+    // 3. If the user is a CLIENT, ensure they own the listing
+    if (user.role() == UserRole.CLIENT) {
+      if (!listing.getCustomerId().equals(user.userId())) {
+        throw new AccessDeniedException("You can only activate your own listings");
+      }
+    }
+
+    // 4. Transition the status to ACTIVE
     listing.transitionTo(ListingStatus.ACTIVE);
     return listingMapper.toListingResponse(listingRepository.save(listing));
   }

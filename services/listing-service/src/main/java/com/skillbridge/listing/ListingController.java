@@ -56,8 +56,8 @@ public class ListingController {
   }
 
   @PostMapping("/activate/{listingId}")
-  public ResponseEntity<ListingResponse> activateListing(@PathVariable Long listingId) {
-    return ResponseEntity.ok(listingService.activateListing(listingId));
+  public ResponseEntity<ListingResponse> activateListing(@PathVariable Long listingId, @CurrentUser AuthUser user) {
+    return ResponseEntity.ok(listingService.activateListing(listingId, user));
   }
 
   @GetMapping("/test")

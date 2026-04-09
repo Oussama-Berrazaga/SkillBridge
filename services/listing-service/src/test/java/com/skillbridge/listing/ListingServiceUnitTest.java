@@ -2,6 +2,7 @@ package com.skillbridge.listing;
 
 import com.skillbridge.category.Category;
 import com.skillbridge.category.CategoryRepository;
+import com.skillbridge.config.AuthUser;
 import com.skillbridge.config.UserRole;
 import com.skillbridge.exception.AccessDeniedException;
 import com.skillbridge.exception.CategoryNotFoundException;
@@ -173,7 +174,7 @@ class ListingServiceUnitTest {
     when(listingRepository.save(any())).thenReturn(listing);
     when(listingMapper.toListingResponse(any())).thenReturn(activeResponse);
 
-    ListingResponse result = listingService.activateListing(1L);
+    ListingResponse result = listingService.activateListing(1L, new AuthUser(10L, UserRole.CLIENT));
 
     assertThat(result.status()).isEqualTo("ACTIVE");
   }
@@ -183,7 +184,7 @@ class ListingServiceUnitTest {
   void activateListing_unknownId_throwsListingNotFound() {
     when(listingRepository.findById(99L)).thenReturn(Optional.empty());
 
-    assertThatThrownBy(() -> listingService.activateListing(99L))
+    assertThatThrownBy(() -> listingService.activateListing(99L, new AuthUser(10L, UserRole.CLIENT)))
         .isInstanceOf(ListingNotFoundException.class);
   }
 
@@ -201,7 +202,7 @@ class ListingServiceUnitTest {
 
     when(listingRepository.findById(2L)).thenReturn(Optional.of(archived));
 
-    assertThatThrownBy(() -> listingService.activateListing(2L))
+    assertThatThrownBy(() -> listingService.activateListing(2L, new AuthUser(10L, UserRole.CLIENT)))
         .isInstanceOf(IllegalStateException.class);
   }
 
