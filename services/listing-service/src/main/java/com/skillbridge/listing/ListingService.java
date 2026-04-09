@@ -78,6 +78,12 @@ public class ListingService {
         .toList();
   }
 
+  public ListingResponse getListing(Long listingId) {
+    Listing listing = listingRepository.findById(listingId)
+        .orElseThrow(() -> new ListingNotFoundException("Listing not found with ID: " + listingId));
+    return listingMapper.toListingResponse(listing);
+  }
+
   public Page<ListingResponse> searchListings(String title, ListingStatus status, Long categoryId, Pageable pageable) {
     // Start with an 'unrestricted' spec (basically 1=1 in SQL)
     Specification<Listing> spec = Specification.unrestricted();

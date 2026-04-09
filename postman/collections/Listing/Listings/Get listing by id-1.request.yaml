@@ -1,5 +1,5 @@
 $kind: http-request
 name: Get listing by id
-url: "{{base_url}}/listings/1"
+url: "{{base_url}}/listings/4"
 method: GET
 order: 643419956478915

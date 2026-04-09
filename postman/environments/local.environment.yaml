@@ -1,14 +1,26 @@
 name: local
 values:
   - key: base_url
-    value: ''
+    value: 'localhost:8222/api/v1'
     enabled: true
   - key: user_token
-    value: ''
+    value: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjMsInJvbGUiOiJDTElFTlQiLCJzdWIiOiJqb2huLmRvZUB5b3BtYWlsLmNvbSIsImlhdCI6MTc3NTczMTMwMCwiZXhwIjoxNzc1ODE3NzAwfQ.rfjpr0nja0FYo26LLQnozjcakM5VGZ-oWJYN2mPdZvI
     enabled: true
   - key: user_role
-    value: ''
+    value: CLIENT
     enabled: true
   - key: user_id
-    value: ''
+    value: '3'
+    enabled: true
+  - key: test_client
+    value: joe.doe@yopmail.com
+    enabled: true
+  - key: test_tech
+    value: tech@yopmail.com
+    enabled: true
+  - key: test_admin
+    value: contact@skillbridge.tn
+    enabled: true
+  - key: test_password
+    value: Test@123
     enabled: true

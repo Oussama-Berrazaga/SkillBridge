@@ -1,5 +1,7 @@
 package com.skillbridge.application;
 
+import com.skillbridge.config.AuthUser;
+import com.skillbridge.config.UserRole;
 import com.skillbridge.exception.ApplicationNotFoundException;
 import com.skillbridge.exception.ListingNotFoundException;
 import com.skillbridge.listing.Listing;
@@ -69,7 +71,7 @@ class ApplicationServiceUnitTest {
         .listing(activeListing)
         .build();
 
-    request = new ApplicationRequest(20L, "I can fix this today", 1L);
+    request = new ApplicationRequest("I can fix this today", 1L);
 
     ListingResponse listingResponse = new ListingResponse(
         1L, "Fix my sink", "Sink is broken and leaking water",
@@ -89,7 +91,7 @@ class ApplicationServiceUnitTest {
     when(applicationRepository.save(any(Application.class))).thenReturn(pendingApplication);
     when(applicationMapper.toApplicationResponse(pendingApplication)).thenReturn(response);
 
-    ApplicationResponse result = applicationService.apply(request);
+    ApplicationResponse result = applicationService.apply(request, new AuthUser(20L, UserRole.TECHNICIAN));
 
     assertThat(result.status()).isEqualTo("PENDING");
     assertThat(result.technicianId()).isEqualTo(20L);
@@ -101,7 +103,7 @@ class ApplicationServiceUnitTest {
   void apply_unknownListing_throwsListingNotFound() {
     when(listingRepository.findById(1L)).thenReturn(Optional.empty());
 
-    assertThatThrownBy(() -> applicationService.apply(request))
+    assertThatThrownBy(() -> applicationService.apply(request, new AuthUser(20L, UserRole.TECHNICIAN)))
         .isInstanceOf(ListingNotFoundException.class);
 
     verify(applicationRepository, never()).save(any());
@@ -112,8 +114,8 @@ class ApplicationServiceUnitTest {
   void apply_draftListing_throwsIllegalState() {
     when(listingRepository.findById(1L)).thenReturn(Optional.of(draftListing));
 
-    ApplicationRequest draftRequest = new ApplicationRequest(20L, "I can fix this", 1L);
-    assertThatThrownBy(() -> applicationService.apply(draftRequest))
+    ApplicationRequest draftRequest = new ApplicationRequest("I can fix this", 1L);
+    assertThatThrownBy(() -> applicationService.apply(draftRequest, new AuthUser(20L, UserRole.TECHNICIAN)))
         .isInstanceOf(IllegalStateException.class)
         .hasMessageContaining("ACTIVE");
 
@@ -126,7 +128,7 @@ class ApplicationServiceUnitTest {
     when(listingRepository.findById(1L)).thenReturn(Optional.of(activeListing));
     when(applicationRepository.existsByListingIdAndTechnicianId(1L, 20L)).thenReturn(true);
 
-    assertThatThrownBy(() -> applicationService.apply(request))
+    assertThatThrownBy(() -> applicationService.apply(request, new AuthUser(20L, UserRole.TECHNICIAN)))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessageContaining("already applied");
 
@@ -141,7 +143,7 @@ class ApplicationServiceUnitTest {
     when(applicationRepository.save(any())).thenReturn(pendingApplication);
     when(applicationMapper.toApplicationResponse(any())).thenReturn(response);
 
-    applicationService.apply(request);
+    applicationService.apply(request, new AuthUser(20L, UserRole.TECHNICIAN));
 
     verify(applicationRepository).save(argThat(a -> a.getStatus() == ApplicationStatus.PENDING));
   }

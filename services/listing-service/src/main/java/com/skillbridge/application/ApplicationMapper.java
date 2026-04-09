@@ -24,7 +24,6 @@ public class ApplicationMapper {
 
   public Application toApplication(ApplicationRequest request) {
     return Application.builder()
-        .technicianId(request.technicianId())
         .message(request.message())
         .listing(Listing.builder().id(request.listingId()).build())
         .build();

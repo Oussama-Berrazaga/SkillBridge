@@ -36,6 +36,11 @@ public class ListingController {
         .body(listingService.createListing(request, user.userId(), user.role()));
   }
 
+  @GetMapping("/{listingId}")
+  public ResponseEntity<ListingResponse> getListing(@PathVariable Long listingId) {
+    return ResponseEntity.ok(listingService.getListing(listingId));
+  }
+
   @GetMapping
   public ResponseEntity<List<ListingResponse>> getAll() {
     return ResponseEntity.ok(listingService.getAllListings());

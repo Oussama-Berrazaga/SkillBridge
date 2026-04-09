@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.skillbridge.config.AuthUser;
+import com.skillbridge.config.UserRole;
 import com.skillbridge.exception.ApplicationNotFoundException;
 import com.skillbridge.exception.ListingNotFoundException;
 import com.skillbridge.listing.Listing;
@@ -22,28 +24,35 @@ public class ApplicationService {
   private final ApplicationMapper applicationMapper;
 
   @Transactional
-  public ApplicationResponse apply(ApplicationRequest request) {
-    // 1. Find the listing
+  public ApplicationResponse apply(ApplicationRequest request, AuthUser user) {
+
+    // 1. External Validation: Check if the caller has the right role
+    if (user.role() != UserRole.TECHNICIAN) {
+      throw new IllegalStateException("Only users with TECHNICIAN role can apply to listings");
+    }
+
+    Long technicianId = user.userId();
+    // 2. Find the listing
     Listing listing = listingRepository.findById(request.listingId())
         .orElseThrow(() -> new ListingNotFoundException("Listing not found"));
 
-    // 2. Rule: Only apply to ACTIVE listings
+    // 3. Rule: Only apply to ACTIVE listings
     if (listing.getStatus() != ListingStatus.ACTIVE) {
       throw new IllegalStateException("You can only apply to listings that are currently ACTIVE");
     }
 
-    // 3. Rule: Check for duplicate applications
+    // 4. Rule: Check for duplicate applications
     boolean alreadyApplied = applicationRepository
-        .existsByListingIdAndTechnicianId(request.listingId(), request.technicianId());
+        .existsByListingIdAndTechnicianId(request.listingId(), technicianId);
 
     if (alreadyApplied) {
-      throw new IllegalArgumentException("You have already applied for this listing");
+      throw new IllegalStateException("You have already applied for this listing");
     }
 
-    // 4. Create and Save
+    // 5. Create and Save
     Application application = Application.builder()
         .listing(listing)
-        .technicianId(request.technicianId())
+        .technicianId(technicianId)
         .message(request.message())
         .status(ApplicationStatus.PENDING)
         .build();

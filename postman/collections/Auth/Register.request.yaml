@@ -4,5 +4,19 @@ url: "{{base_url}}/auth/register"
 method: POST
 body:
   type: json
-  content: ""
+  content: |2-
+     {
+            "email": "tech@yopmail.com",
+            "password": "Test@123",
+            "role": "TECHNICIAN",
+            "profile": {
+                "firstName": "Ali",
+                "lastName": "Tech",
+                "phoneNumber": "53333333",
+                "birthDate": "1994-06-01",
+                "bio": "Hello, I am Ali Tech",
+                "averageRating": 0.0,
+                "skills": []
+            }
+    }
 order: 2702291361899010
