@@ -6,16 +6,18 @@ body:
   type: json
   content: |-
     {
-        "email": "john.doe@yopmail.com",
+        "email": "tech@yopmail.com", //"john.doe@yopmail.com",
         "password": "Test@123"
     }
 scripts:
   - type: afterResponse
     code: |-
-      var jsonData = pm.response.json();
+      if (pm.response.code === 200) {
+          var jsonData = pm.response.json();
 
-      pm.environment.set("user_token",jsonData.token);
-      pm.environment.set("user_role",jsonData.role);
-      pm.environment.set("user_id",jsonData.userId);
+          pm.environment.set("user_token",jsonData.token);
+          pm.environment.set("user_role",jsonData.role);
+          pm.environment.set("user_id",jsonData.userId);
+      }
     language: text/javascript
 order: 1773184719083

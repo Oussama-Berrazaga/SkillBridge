@@ -3,6 +3,8 @@ package com.skillbridge.application;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.skillbridge.config.AuthUser;
+import com.skillbridge.config.CurrentUser;
 import com.skillbridge.listing.AcceptApplicationRequest;
 
 import jakarta.validation.Valid;
@@ -35,8 +37,9 @@ public class ApplicationController {
   }
 
   @PostMapping("/apply")
-  public ResponseEntity<ApplicationResponse> apply(@RequestBody @Valid ApplicationRequest request) {
-    return ResponseEntity.ok(applicationService.apply(request));
+  public ResponseEntity<ApplicationResponse> apply(@RequestBody @Valid ApplicationRequest request,
+      @CurrentUser AuthUser user) {
+    return ResponseEntity.ok(applicationService.apply(request, user));
   }
 
   @PostMapping("/accept")

@@ -3,10 +3,7 @@ name: Search listing
 url: "{{base_url}}/listings/search?title=&status=&categoryId="
 method: GET
 queryParams:
-  - key: title
-    value: ""
-  - key: status
-    value: ""
-  - key: categoryId
-    value: ""
-order: 897217717444066
+  title: ""
+  status: ""
+  categoryId: ""
+order: 1094533358034550

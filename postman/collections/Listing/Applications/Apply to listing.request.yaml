@@ -1,0 +1,12 @@
+$kind: http-request
+name: Apply to listing
+url: "{{base_url}}/applications/apply"
+method: GET
+body:
+  type: json
+  content: |-
+    {
+        "message":"Hello, I can fix this issue",
+        "listingId":8
+    }
+order: 1775733886434

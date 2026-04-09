@@ -1,0 +1,17 @@
+spring:
+  cloud:
+    config:
+      enabled: false
+  eureka:
+    client:
+      enabled: false
+      register-with-eureka: false
+      fetch-registry: false
+  kafka:
+    bootstrap-servers: localhost:9092 # won't connect, Kafka beans still need a value
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+  jpa:
+    hibernate:
+      ddl-auto: validate

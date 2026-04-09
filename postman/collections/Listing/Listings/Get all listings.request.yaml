@@ -1,0 +1,5 @@
+$kind: http-request
+name: Get all listings
+url: "{{base_url}}/listings"
+method: GET
+order: 897217717444066
