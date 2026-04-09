@@ -107,6 +107,7 @@ Intervention marked as completed → Listing archived
 - [x] Spring Security — JWT filter chain
 - [x] Secure endpoints by role via Gateway
 - [x] Propagate JWT to downstream services (OpenFeign interceptor)
+- [x] Implement unit tests and integration tests
 
 ---
 
@@ -115,6 +116,7 @@ Intervention marked as completed → Listing archived
 - [x] Listing entity, repository, service, controller
 - [x] Application entity (technician applies to a listing)
 - [x] Proposal entity (technician offers a visit/quote to client)
+- [x] Implement unit tests and integration tests
 - [ ] AI-powered listing auto-categorization on creation
 - [ ] AI-powered proposal price suggestion for technicians
 
