@@ -21,4 +21,14 @@ public class AuthController {
     return ResponseEntity.ok(authService.register(request));
   }
 
+  @GetMapping("/get-user-info")
+  public ResponseEntity<String> someEndpoint(
+      @RequestHeader("X-User-Id") Long userId,
+      @RequestHeader("X-User-Role") String role) {
+
+    // You know exactly who is calling and what their role is
+    // No JWT parsing needed here
+
+    return ResponseEntity.ok("User id: " + userId + " role: " + role);
+  }
 }

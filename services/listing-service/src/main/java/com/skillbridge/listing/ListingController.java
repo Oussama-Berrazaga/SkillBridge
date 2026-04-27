@@ -21,6 +21,7 @@ import com.skillbridge.config.CurrentUser;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import lombok.NonNull;
 
 @AllArgsConstructor
 @RestController
@@ -56,18 +57,9 @@ public class ListingController {
   }
 
   @PostMapping("/activate/{listingId}")
-  public ResponseEntity<ListingResponse> activateListing(@PathVariable Long listingId, @CurrentUser AuthUser user) {
+  public ResponseEntity<ListingResponse> activateListing(@PathVariable @NonNull Long listingId,
+      @CurrentUser AuthUser user) {
     return ResponseEntity.ok(listingService.activateListing(listingId, user));
   }
 
-  @GetMapping("/test")
-  public ResponseEntity<?> someEndpoint(
-      @RequestHeader("X-User-Id") Long userId,
-      @RequestHeader("X-User-Role") String role) {
-
-    // You know exactly who is calling and what their role is
-    // No JWT parsing needed here
-
-    return ResponseEntity.ok("User id: " + userId + " role: " + role);
-  }
 }
